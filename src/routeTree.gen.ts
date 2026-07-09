@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as StoresRouteImport } from './routes/stores'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PopularStoresRouteImport } from './routes/popular-stores'
 import { Route as FeaturedStoresRouteImport } from './routes/featured-stores'
@@ -28,6 +29,11 @@ const TermsRoute = TermsRouteImport.update({
 const StoresRoute = StoresRouteImport.update({
   id: '/stores',
   path: '/stores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/featured-stores': typeof FeaturedStoresRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/featured-stores': typeof FeaturedStoresRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/featured-stores': typeof FeaturedStoresRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/featured-stores'
     | '/popular-stores'
     | '/privacy'
+    | '/search'
     | '/stores'
     | '/terms'
     | '/store/$slug'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/featured-stores'
     | '/popular-stores'
     | '/privacy'
+    | '/search'
     | '/stores'
     | '/terms'
     | '/store/$slug'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/featured-stores'
     | '/popular-stores'
     | '/privacy'
+    | '/search'
     | '/stores'
     | '/terms'
     | '/store/$slug'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   FeaturedStoresRoute: typeof FeaturedStoresRoute
   PopularStoresRoute: typeof PopularStoresRoute
   PrivacyRoute: typeof PrivacyRoute
+  SearchRoute: typeof SearchRoute
   StoresRoute: typeof StoresRoute
   TermsRoute: typeof TermsRoute
   StoreSlugRoute: typeof StoreSlugRoute
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/stores'
       fullPath: '/stores'
       preLoaderRoute: typeof StoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeaturedStoresRoute: FeaturedStoresRoute,
   PopularStoresRoute: PopularStoresRoute,
   PrivacyRoute: PrivacyRoute,
+  SearchRoute: SearchRoute,
   StoresRoute: StoresRoute,
   TermsRoute: TermsRoute,
   StoreSlugRoute: StoreSlugRoute,
