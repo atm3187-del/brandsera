@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search, CheckCircle2, Flame, Zap, ShieldCheck, Copy, Chrome, Moon } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Savvy — The Smarter Way to Save Online" },
+      { title: "Brands Era — The Smarter Way to Save Online" },
       { name: "description", content: "Find verified promo codes and exclusive discounts from 5,000+ top brands, updated daily." },
-      { property: "og:title", content: "Savvy — The Smarter Way to Save Online" },
+      { property: "og:title", content: "Brands Era — The Smarter Way to Save Online" },
       { property: "og:description", content: "Verified promo codes from 5,000+ top brands." },
     ],
   }),
@@ -52,17 +53,17 @@ function BrandLogo({ name, size = "md" }: { name: string; size?: "sm" | "md" | "
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground font-sans">
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold">S</div>
-            <div className="hidden sm:block">
-              <div className="text-base font-bold leading-none">Savvy</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Save Smarter</div>
+          <a href="#" className="flex items-center gap-3">
+            <img src={logo} alt="Brands Era" width={40} height={40} className="h-10 w-10" />
+            <div className="hidden sm:block font-display">
+              <div className="text-base font-bold leading-none tracking-tight">Brands Era</div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground mt-0.5">Save Smarter</div>
             </div>
-          </div>
+          </a>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="#" className="hover:text-primary">Home</a>
             <a href="#stores" className="hover:text-primary">All Stores</a>
@@ -92,13 +93,13 @@ function Index() {
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
             <CheckCircle2 className="h-3.5 w-3.5" /> Verified Deals for July 2026
           </div>
-          <h1 className="mt-8 text-5xl font-bold tracking-tight md:text-7xl">
+          <h1 className="mt-8 font-display text-5xl font-bold tracking-tight md:text-7xl">
             The Smarter Way to
             <br />
             <span className="text-primary">Save Online.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Savvy helps you find the latest verified promo codes and exclusive discounts from 5,000+ top brands instantly.
+            Brands Era helps you find the latest verified promo codes and exclusive discounts from 5,000+ top brands instantly.
           </p>
 
           <div className="mx-auto mt-10 flex max-w-2xl items-center gap-2 rounded-full border border-border bg-card p-2 shadow-xl" style={{ boxShadow: "var(--shadow-glow)" }}>
@@ -129,7 +130,7 @@ function Index() {
       {/* Hot Deals */}
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="text-center">
-          <h2 className="flex items-center justify-center gap-3 text-3xl font-bold md:text-4xl">
+          <h2 className="flex items-center justify-center gap-3 font-display text-3xl font-bold md:text-4xl">
             <Flame className="h-8 w-8 text-primary" /> Hot Deals Right Now
           </h2>
           <p className="mt-3 text-muted-foreground">Verified coupons updated daily — save big on your favorite brands.</p>
@@ -167,7 +168,7 @@ function Index() {
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="text-3xl font-bold md:text-4xl">Premium Brands</h2>
+              <h2 className="font-display text-3xl font-bold md:text-4xl">Premium Brands</h2>
               <p className="mt-2 text-muted-foreground">Hand-picked stores with the highest saving potential this week.</p>
             </div>
             <a href="#" className="text-sm font-semibold text-primary hover:underline">Explore All Stores →</a>
@@ -187,7 +188,7 @@ function Index() {
       {/* Trending */}
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">Trending Now</h2>
+          <h2 className="font-display text-3xl font-bold md:text-4xl">Trending Now</h2>
           <p className="mt-3 text-muted-foreground">Discover the most used coupons and popular brands today.</p>
         </div>
         <div className="mt-12 grid gap-10 lg:grid-cols-2">
@@ -225,7 +226,7 @@ function Index() {
       {/* Why */}
       <section id="about" className="border-t border-border bg-card/30 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-4 text-center md:px-6">
-          <h2 className="text-3xl font-bold md:text-4xl">Why Choose Savvy?</h2>
+          <h2 className="font-display text-3xl font-bold md:text-4xl">Why Choose Brands Era?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
             Join thousands of smart shoppers who save money every day with verified coupon codes.
           </p>
@@ -253,8 +254,8 @@ function Index() {
           <div className="grid gap-8 md:grid-cols-4">
             <div>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold">S</div>
-                <div className="font-bold">Savvy</div>
+                <img src={logo} alt="Brands Era" width={40} height={40} className="h-10 w-10" loading="lazy" />
+                <div className="font-display font-bold">Brands Era</div>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">The smarter way to save online, with verified codes from thousands of brands.</p>
             </div>
@@ -272,7 +273,7 @@ function Index() {
             ))}
           </div>
           <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Savvy. All rights reserved.
+            © {new Date().getFullYear()} Brands Era. All rights reserved.
           </div>
         </div>
       </footer>
