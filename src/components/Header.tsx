@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Search, Menu, X, Chrome, Moon, Sun } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Search, Menu, X, Chrome, Moon, Sun, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -14,10 +16,19 @@ const navLinks = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dark, setDark] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const toggleTheme = () => {
     setDark((d) => !d);
     document.documentElement.classList.toggle("dark");
+  };
+
+  const signOut = async () => {
+    setAccountOpen(false);
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
   };
 
   return (
@@ -60,13 +71,48 @@ export function Header() {
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <a
-            href="https://chromewebstore.google.com"
-            className="hidden sm:inline-flex items-center gap-2 rounded-md bg-primary border-2 border-foreground px-4 py-2 text-sm font-black uppercase text-primary-foreground hover:-translate-y-0.5 transition"
-            style={{ boxShadow: "var(--shadow-card)" }}
-          >
-            <Chrome className="h-4 w-4" /> Add to Chrome
-          </a>
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setAccountOpen((o) => !o)}
+                className="flex items-center gap-2 rounded-md border-2 border-foreground bg-card px-3 py-2 text-sm font-bold uppercase hover:bg-accent"
+                aria-label="Account menu"
+              >
+                <UserIcon className="h-4 w-4" />
+                <span className="hidden sm:inline max-w-[100px] truncate">
+                  {user.email?.split("@")[0]}
+                </span>
+              </button>
+              {accountOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-52 rounded-md border-2 border-foreground bg-card p-2"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setAccountOpen(false)}
+                    className="flex items-center gap-2 rounded px-3 py-2 text-sm font-bold hover:bg-accent"
+                  >
+                    <LayoutDashboard className="h-4 w-4" /> Dashboard
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm font-bold hover:bg-accent"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="hidden sm:inline-flex items-center gap-2 rounded-md bg-primary border-2 border-foreground px-4 py-2 text-sm font-black uppercase text-primary-foreground hover:-translate-y-0.5 transition"
+              style={{ boxShadow: "var(--shadow-card)" }}
+            >
+              <Chrome className="h-4 w-4" /> Sign in
+            </Link>
+          )}
           <button
             className="md:hidden rounded-md border-2 border-foreground bg-card p-2 hover:bg-accent"
             aria-label="Toggle menu"
