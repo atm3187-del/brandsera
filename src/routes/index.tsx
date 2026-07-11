@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, CheckCircle2, Flame, Zap, ShieldCheck, Copy } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores, allCoupons } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,12 +22,12 @@ const stats = [
   { value: "100K+", label: "Happy Shoppers" },
 ];
 
-const hotDeals = stores.flatMap((s) => s.coupons.slice(0, 2).map((c) => ({ ...c, store: s }))).slice(0, 6);
-const premiumBrands = stores.filter((s) => s.premium);
-const popularBrands = stores.filter((s) => s.popular);
-const topCoupons = [...allCoupons].sort((a, b) => b.uses - a.uses).slice(0, 5);
-
 function Index() {
+  const { stores, allCoupons } = useStoresData();
+  const hotDeals = stores.flatMap((s) => s.coupons.slice(0, 2).map((c) => ({ ...c, store: s }))).slice(0, 6);
+  const premiumBrands = stores.filter((s) => s.premium);
+  const popularBrands = stores.filter((s) => s.popular);
+  const topCoupons = [...allCoupons].sort((a, b) => b.uses - a.uses).slice(0, 5);
   return (
     <div>
       {/* Hero */}
