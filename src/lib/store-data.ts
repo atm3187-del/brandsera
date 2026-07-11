@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
 export interface Coupon {
   id: string;
   title: string;
@@ -34,7 +37,71 @@ export const categories = [
   "Pets",
 ];
 
-export const stores: Store[] = [
+function daysFromNow(iso: string | null): number {
+  if (!iso) return 30;
+  const ms = new Date(iso).getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+export async function fetchStores(): Promise<Store[]> {
+  const { data: storeRows, error } = await supabase
+    .from("stores")
+    .select("id,name,slug,category,description,featured,popular,premium")
+    .order("name");
+  if (error) throw error;
+  const { data: couponRows, error: cErr } = await supabase
+    .from("coupons")
+    .select("id,store_id,title,description,type,code,uses,expires_at,verified");
+  if (cErr) throw cErr;
+  const byStore = new Map<string, Coupon[]>();
+  for (const c of couponRows ?? []) {
+    const list = byStore.get(c.store_id) ?? [];
+    list.push({
+      id: c.id,
+      title: c.title,
+      description: c.description,
+      type: c.type === "code" ? "Code" : "Deal",
+      code: c.code ?? undefined,
+      uses: c.uses,
+      expiryDays: daysFromNow(c.expires_at),
+      verified: c.verified,
+    });
+    byStore.set(c.store_id, list);
+  }
+  return (storeRows ?? []).map((s) => ({
+    id: s.id,
+    name: s.name,
+    slug: s.slug,
+    category: s.category,
+    description: s.description,
+    featured: s.featured,
+    popular: s.popular,
+    premium: s.premium,
+    coupons: byStore.get(s.id) ?? [],
+  }));
+}
+
+export function useStoresData() {
+  const q = useQuery({ queryKey: ["stores-all"], queryFn: fetchStores, staleTime: 60_000 });
+  const stores = q.data ?? [];
+  const allCoupons = stores.flatMap((s) => s.coupons.map((c) => ({ ...c, store: s })));
+  return { stores, allCoupons, loading: q.isLoading, error: q.error };
+}
+
+// Legacy empty stubs so any lingering imports don't break at build.
+export const stores: Store[] = [];
+export const allCoupons: (Coupon & { store: Store })[] = [];
+export function getStoreBySlug(slug: string, list: Store[] = stores) {
+  return list.find((s) => s.slug === slug);
+}
+export function getStoresByCategory(category: string, list: Store[] = stores) {
+  return list.filter((s) => s.category === category);
+}
+export function getStoresByLetter(letter: string, list: Store[] = stores) {
+  return list.filter((s) => s.name[0].toUpperCase() === letter.toUpperCase());
+}
+
+const _legacyStores: Store[] = [
   {
     id: "1",
     name: "Regno",
@@ -273,19 +340,4 @@ export const stores: Store[] = [
     ],
   },
 ];
-
-export const allCoupons = stores.flatMap((s) =>
-  s.coupons.map((c) => ({ ...c, store: s }))
-);
-
-export function getStoreBySlug(slug: string) {
-  return stores.find((s) => s.slug === slug);
-}
-
-export function getStoresByCategory(category: string) {
-  return stores.filter((s) => s.category === category);
-}
-
-export function getStoresByLetter(letter: string) {
-  return stores.filter((s) => s.name[0].toUpperCase() === letter.toUpperCase());
-}
+void _legacyStores;
