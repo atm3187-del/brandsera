@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TrendingUp } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores, allCoupons } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/popular-stores")({
   head: () => ({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/popular-stores")({
 });
 
 function PopularStoresPage() {
+  const { stores, allCoupons } = useStoresData();
   const popular = stores.filter((s) => s.popular);
   const topCoupons = [...allCoupons].sort((a, b) => b.uses - a.uses).slice(0, 10);
 

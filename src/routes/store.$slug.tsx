@@ -2,17 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Copy, ArrowLeft, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores, allCoupons } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/store/$slug")({
   head: ({ params }) => {
-    const store = stores.find((s) => s.slug === params.slug);
+    const name = params.slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
     return {
       meta: [
-        { title: store ? `${store.name} Coupons & Deals — Brands Era` : "Store — Brands Era" },
-        { name: "description", content: store ? `Verified ${store.name} coupons and deals at Brands Era.` : "Store details." },
-        { property: "og:title", content: store ? `${store.name} Coupons — Brands Era` : "Store" },
-        { property: "og:description", content: store ? `Verified coupons for ${store.name}.` : "Store details." },
+        { title: `${name} Coupons & Deals — Brands Era` },
+        { name: "description", content: `Verified ${name} coupons and deals at Brands Era.` },
+        { property: "og:title", content: `${name} Coupons — Brands Era` },
+        { property: "og:description", content: `Verified coupons for ${name}.` },
       ],
     };
   },
@@ -21,9 +21,13 @@ export const Route = createFileRoute("/store/$slug")({
 
 function StorePage() {
   const { slug } = Route.useParams();
+  const { stores, loading } = useStoresData();
   const store = stores.find((s) => s.slug === slug);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  if (loading) {
+    return <div className="mx-auto max-w-3xl px-4 py-20 text-center text-muted-foreground font-medium">Loading…</div>;
+  }
   if (!store) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">

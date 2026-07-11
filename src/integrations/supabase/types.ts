@@ -14,6 +14,85 @@ export type Database = {
   }
   public: {
     Tables: {
+      coupons: {
+        Row: {
+          code: string | null
+          created_at: string
+          description: string
+          expires_at: string | null
+          id: string
+          store_id: string
+          title: string
+          type: Database["public"]["Enums"]["coupon_type"]
+          updated_at: string
+          uses: number
+          verified: boolean
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          store_id: string
+          title: string
+          type?: Database["public"]["Enums"]["coupon_type"]
+          updated_at?: string
+          uses?: number
+          verified?: boolean
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          store_id?: string
+          title?: string
+          type?: Database["public"]["Enums"]["coupon_type"]
+          updated_at?: string
+          uses?: number
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupons_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          coupon_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          coupon_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          coupon_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -35,6 +114,51 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      stores: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          featured: boolean
+          id: string
+          logo_url: string | null
+          name: string
+          popular: boolean
+          premium: boolean
+          slug: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string
+          featured?: boolean
+          id?: string
+          logo_url?: string | null
+          name: string
+          popular?: boolean
+          premium?: boolean
+          slug: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          featured?: boolean
+          id?: string
+          logo_url?: string | null
+          name?: string
+          popular?: boolean
+          premium?: boolean
+          slug?: string
+          updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -74,6 +198,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      coupon_type: "code" | "deal"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -202,6 +327,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      coupon_type: ["code", "deal"],
     },
   },
 } as const

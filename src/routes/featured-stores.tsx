@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/featured-stores")({
   head: () => ({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/featured-stores")({
 });
 
 function FeaturedStoresPage() {
+  const { stores } = useStoresData();
   const featured = stores.filter((s) => s.featured || s.premium);
 
   return (
