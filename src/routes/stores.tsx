@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Store } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/stores")({
   head: () => ({
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/stores")({
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 function AllStoresPage() {
+  const { stores } = useStoresData();
   const [query, setQuery] = useState("");
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
 
