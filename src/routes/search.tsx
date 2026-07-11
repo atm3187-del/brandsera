@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { stores, allCoupons } from "@/lib/store-data";
+import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/search")({
   head: () => ({
@@ -17,6 +17,7 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchPage() {
+  const { stores, allCoupons } = useStoresData();
   const [query, setQuery] = useState("");
 
   const matchingStores = stores.filter((s) => s.name.toLowerCase().includes(query.toLowerCase()));

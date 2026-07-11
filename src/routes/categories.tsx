@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Tag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { categories, stores } from "@/lib/store-data";
+import { categories, useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/categories")({
   head: () => ({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/categories")({
 });
 
 function CategoriesPage() {
+  const { stores } = useStoresData();
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
       <div className="text-center">
