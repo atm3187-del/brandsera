@@ -25,6 +25,7 @@ import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardSavedRouteImport } from './routes/_authenticated/dashboard.saved'
+import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardAlertsRouteImport } from './routes/_authenticated/dashboard.alerts'
 
 const TermsRoute = TermsRouteImport.update({
@@ -107,6 +108,12 @@ const AuthenticatedDashboardSavedRoute =
     path: '/saved',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardProfileRoute =
+  AuthenticatedDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAlertsRoute =
   AuthenticatedDashboardAlertsRouteImport.update({
     id: '/alerts',
@@ -130,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/store/$slug': typeof StoreSlugRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
 }
 export interface FileRoutesByTo {
@@ -148,6 +156,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/store/$slug': typeof StoreSlugRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
 }
 export interface FileRoutesById {
@@ -168,6 +177,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/store/$slug': typeof StoreSlugRoute
   '/_authenticated/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
 }
 export interface FileRouteTypes {
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/store/$slug'
     | '/dashboard/alerts'
+    | '/dashboard/profile'
     | '/dashboard/saved'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/store/$slug'
     | '/dashboard/alerts'
+    | '/dashboard/profile'
     | '/dashboard/saved'
   id:
     | '__root__'
@@ -225,6 +237,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/store/$slug'
     | '/_authenticated/dashboard/alerts'
+    | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/saved'
   fileRoutesById: FileRoutesById
 }
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSavedRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/profile': {
+      id: '/_authenticated/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/alerts': {
       id: '/_authenticated/dashboard/alerts'
       path: '/alerts'
@@ -370,12 +390,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAlertsRoute: typeof AuthenticatedDashboardAlertsRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardSavedRoute: typeof AuthenticatedDashboardSavedRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAlertsRoute: AuthenticatedDashboardAlertsRoute,
+    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardSavedRoute: AuthenticatedDashboardSavedRoute,
   }
 
