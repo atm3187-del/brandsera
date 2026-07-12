@@ -1,8 +1,12 @@
-import { CheckCircle2, Copy } from "lucide-react";
+import { CheckCircle2, Copy, Heart } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
 import type { Coupon, Store } from "@/lib/store-data";
+import { useFavorite } from "@/hooks/use-favorite";
+import { useAuth } from "@/hooks/use-auth";
 
 export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) {
+  const { user } = useAuth();
+  const { isFavorite, toggle, pending } = useFavorite(coupon.id);
   return (
     <div
       className="group rounded-md border-2 border-foreground bg-card p-6 transition hover:-translate-x-0.5 hover:-translate-y-0.5"
@@ -10,9 +14,21 @@ export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) 
     >
       <div className="flex items-start justify-between">
         <BrandLogo name={store.name} />
-        <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
-          <CheckCircle2 className="h-3 w-3" /> {coupon.type}
-        </span>
+        <div className="flex items-center gap-2">
+          {user && (
+            <button
+              onClick={toggle}
+              disabled={pending}
+              aria-label={isFavorite ? "Remove from favorites" : "Save coupon"}
+              className="rounded-md border-2 border-foreground bg-card p-1.5 hover:bg-accent"
+            >
+              <Heart className={`h-4 w-4 ${isFavorite ? "fill-primary text-primary" : ""}`} />
+            </button>
+          )}
+          <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
+            <CheckCircle2 className="h-3 w-3" /> {coupon.type}
+          </span>
+        </div>
       </div>
       <div className="mt-4 text-xs font-bold uppercase tracking-widest text-primary">{store.name}</div>
       <h3 className="mt-1 font-display text-xl font-black leading-tight">{coupon.title}</h3>
