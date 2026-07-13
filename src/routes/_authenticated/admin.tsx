@@ -2,7 +2,7 @@ import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, ShieldCheck, ArrowLeft, BarChart3, Users, Store as StoreIcon, Ticket } from "lucide-react";
 import { categories } from "@/lib/store-data";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -42,7 +42,7 @@ type CouponRow = {
 
 function AdminPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"stores" | "coupons">("stores");
+  const [tab, setTab] = useState<"analytics" | "stores" | "coupons">("analytics");
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
   const storesQ = useQuery({
@@ -82,7 +82,7 @@ function AdminPage() {
       </div>
 
       <div className="mb-6 flex gap-2 border-b-2 border-foreground">
-        {(["stores", "coupons"] as const).map((t) => (
+        {(["analytics", "stores", "coupons"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -93,6 +93,7 @@ function AdminPage() {
         ))}
       </div>
 
+      {tab === "analytics" && <AnalyticsAdmin />}
       {tab === "stores" && (
         <StoresAdmin stores={storesQ.data ?? []} loading={storesQ.isLoading} onChange={invalidate} />
       )}
