@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, Menu, X, Chrome, Moon, Sun, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -20,9 +20,21 @@ export function Header() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    const prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = saved ? saved === "dark" : prefers;
+    setDark(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, []);
+
   const toggleTheme = () => {
-    setDark((d) => !d);
-    document.documentElement.classList.toggle("dark");
+    setDark((d) => {
+      const next = !d;
+      document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
+    });
   };
 
   const signOut = async () => {

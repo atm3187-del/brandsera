@@ -2,7 +2,7 @@ import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, ShieldCheck, ArrowLeft, BarChart3, Users, Store as StoreIcon, Ticket } from "lucide-react";
 import { categories } from "@/lib/store-data";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -42,7 +42,7 @@ type CouponRow = {
 
 function AdminPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"stores" | "coupons">("stores");
+  const [tab, setTab] = useState<"analytics" | "stores" | "coupons">("analytics");
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
   const storesQ = useQuery({
@@ -82,7 +82,7 @@ function AdminPage() {
       </div>
 
       <div className="mb-6 flex gap-2 border-b-2 border-foreground">
-        {(["stores", "coupons"] as const).map((t) => (
+        {(["analytics", "stores", "coupons"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -93,6 +93,7 @@ function AdminPage() {
         ))}
       </div>
 
+      {tab === "analytics" && <AnalyticsAdmin />}
       {tab === "stores" && (
         <StoresAdmin stores={storesQ.data ?? []} loading={storesQ.isLoading} onChange={invalidate} />
       )}
@@ -111,6 +112,87 @@ function AdminPage() {
 }
 
 function StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loading: boolean; onChange: () => void }) {
+  return _StoresAdmin({ stores, loading, onChange });
+}
+
+function AnalyticsAdmin() {
+  const analyticsQ = useQuery({
+    queryKey: ["admin-analytics"],
+    queryFn: async () => {
+      const [storesRes, couponsRes, usersRes, favsRes, alertsRes, topRes] = await Promise.all([
+        supabase.from("stores").select("id", { count: "exact", head: true }),
+        supabase.from("coupons").select("id, uses"),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("favorites").select("id", { count: "exact", head: true }),
+        supabase.from("alerts").select("id", { count: "exact", head: true }),
+        supabase.from("coupons").select("store_id, uses, stores(name, slug)").order("uses", { ascending: false }).limit(5),
+      ]);
+      const coupons = couponsRes.data ?? [];
+      const totalUses = coupons.reduce((s, c: any) => s + (c.uses ?? 0), 0);
+      return {
+        stores: storesRes.count ?? 0,
+        coupons: coupons.length,
+        users: usersRes.count ?? 0,
+        favorites: favsRes.count ?? 0,
+        alerts: alertsRes.count ?? 0,
+        totalUses,
+        top: (topRes.data ?? []) as any[],
+      };
+    },
+  });
+
+  const d = analyticsQ.data;
+  const stats = [
+    { label: "Stores", value: d?.stores ?? 0, Icon: StoreIcon },
+    { label: "Coupons", value: d?.coupons ?? 0, Icon: Ticket },
+    { label: "Users", value: d?.users ?? 0, Icon: Users },
+    { label: "Favorites", value: d?.favorites ?? 0, Icon: BarChart3 },
+    { label: "Alerts sent", value: d?.alerts ?? 0, Icon: BarChart3 },
+    { label: "Total coupon uses", value: d?.totalUses ?? 0, Icon: BarChart3 },
+  ];
+
+  return (
+    <div className="space-y-8">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-md border-2 border-foreground bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-black uppercase tracking-wide text-muted-foreground">{s.label}</div>
+              <s.Icon className="h-5 w-5 text-primary" />
+            </div>
+            <div className="mt-2 font-display text-4xl font-black">{s.value.toLocaleString()}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-md border-2 border-foreground bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="border-b-2 border-foreground p-4">
+          <h2 className="font-display text-xl font-black uppercase">Top Coupons by Uses</h2>
+        </div>
+        {analyticsQ.isLoading ? (
+          <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+        ) : (d?.top ?? []).length === 0 ? (
+          <div className="p-6 text-sm text-muted-foreground">No data yet.</div>
+        ) : (
+          <div className="divide-y-2 divide-foreground/20">
+            {(d?.top ?? []).map((c, i) => (
+              <div key={i} className="flex items-center gap-4 p-4">
+                <div className="font-display text-2xl font-black w-8 text-primary">{i + 1}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-display font-black uppercase truncate">{c.stores?.name ?? "—"}</div>
+                  <div className="text-xs font-bold uppercase text-muted-foreground truncate">/{c.stores?.slug}</div>
+                </div>
+                <div className="font-display text-xl font-black">{(c.uses ?? 0).toLocaleString()}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loading: boolean; onChange: () => void }) {
   const [form, setForm] = useState({ name: "", slug: "", category: categories[0], description: "", featured: false, popular: false, premium: false });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
