@@ -14,6 +14,7 @@ import { Route as StoresRouteImport } from './routes/stores'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PopularStoresRouteImport } from './routes/popular-stores'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeaturedStoresRouteImport } from './routes/featured-stores'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -51,6 +52,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PopularStoresRoute = PopularStoresRouteImport.update({
   id: '/popular-stores',
   path: '/popular-stores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturedStoresRoute = FeaturedStoresRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
     | '/search'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
     | '/search'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
     | '/search'
@@ -249,6 +261,7 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
   FeaturedStoresRoute: typeof FeaturedStoresRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   PopularStoresRoute: typeof PopularStoresRoute
   PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/popular-stores'
       fullPath: '/popular-stores'
       preLoaderRoute: typeof PopularStoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/featured-stores': {
@@ -427,6 +447,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
   FeaturedStoresRoute: FeaturedStoresRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   PopularStoresRoute: PopularStoresRoute,
   PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
@@ -437,13 +458,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
