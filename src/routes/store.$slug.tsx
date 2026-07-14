@@ -48,17 +48,28 @@ function StorePage() {
 
   const related = stores.filter((s) => s.category === store.category && s.slug !== store.slug).slice(0, 4);
 
+  const brandUrl = `https://www.google.com/search?q=${encodeURIComponent(store.name + " official site")}`;
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
       <div className="rounded-md border-2 border-foreground bg-card p-8 md:p-12" style={{ boxShadow: "var(--shadow-card)" }}>
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-center">
           <BrandLogo name={store.name} size="lg" />
-          <div>
+          <div className="flex-1">
             <div className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
               <CheckCircle2 className="h-3 w-3" /> Verified
             </div>
             <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{store.name}</h1>
             <p className="mt-2 text-muted-foreground font-medium">{store.description}</p>
+            <a
+              href={brandUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-6 py-3 text-sm font-black uppercase text-primary-foreground hover:bg-accent hover:text-accent-foreground"
+              style={{ boxShadow: "var(--shadow-card)" }}
+            >
+              <ExternalLink className="h-4 w-4" /> Visit {store.name}
+            </a>
           </div>
         </div>
       </div>
@@ -90,14 +101,24 @@ function StorePage() {
                 </button>
               ) : (
                 <a
-                  href="#"
+                  href={brandUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
                 >
                   <ExternalLink className="h-4 w-4" /> Get Deal
                 </a>
               )}
-              <span className="text-xs font-bold uppercase text-muted-foreground">{c.expiryDays}d left</span>
+              <a
+                href={brandUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-black uppercase text-primary hover:underline"
+              >
+                Shop <ExternalLink className="h-3 w-3" />
+              </a>
             </div>
+            <div className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{c.expiryDays}d left</div>
           </div>
         ))}
       </div>
