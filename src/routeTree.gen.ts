@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as StoresRouteImport } from './routes/stores'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PopularStoresRouteImport } from './routes/popular-stores'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -42,6 +43,11 @@ const StoresRoute = StoresRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   PopularStoresRoute: typeof PopularStoresRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   StoresRoute: typeof StoresRoute
   TermsRoute: typeof TermsRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   PopularStoresRoute: PopularStoresRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   StoresRoute: StoresRoute,
   TermsRoute: TermsRoute,
