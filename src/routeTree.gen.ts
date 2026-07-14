@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as StoresRouteImport } from './routes/stores'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PopularStoresRouteImport } from './routes/popular-stores'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeaturedStoresRouteImport } from './routes/featured-stores'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -43,6 +45,11 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -51,6 +58,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PopularStoresRoute = PopularStoresRouteImport.update({
   id: '/popular-stores',
   path: '/popular-stores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturedStoresRoute = FeaturedStoresRouteImport.update({
@@ -128,8 +140,10 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -147,8 +161,10 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -168,8 +184,10 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/featured-stores': typeof FeaturedStoresRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/stores': typeof StoresRoute
   '/terms': typeof TermsRoute
@@ -189,8 +207,10 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -208,8 +228,10 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -228,8 +250,10 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/featured-stores'
+    | '/forgot-password'
     | '/popular-stores'
     | '/privacy'
+    | '/reset-password'
     | '/search'
     | '/stores'
     | '/terms'
@@ -249,8 +273,10 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
   FeaturedStoresRoute: typeof FeaturedStoresRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   PopularStoresRoute: typeof PopularStoresRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   StoresRoute: typeof StoresRoute
   TermsRoute: typeof TermsRoute
@@ -280,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -292,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/popular-stores'
       fullPath: '/popular-stores'
       preLoaderRoute: typeof PopularStoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/featured-stores': {
@@ -427,8 +467,10 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
   FeaturedStoresRoute: FeaturedStoresRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   PopularStoresRoute: PopularStoresRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   StoresRoute: StoresRoute,
   TermsRoute: TermsRoute,
@@ -437,13 +479,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
