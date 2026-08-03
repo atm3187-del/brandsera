@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, Copy, ArrowLeft, ExternalLink } from "lucide-react";
+import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
+import { getBrandContent } from "@/lib/brand-content";
 
 export const Route = createFileRoute("/store/$slug")({
   head: ({ params }) => {
@@ -49,6 +50,7 @@ function StorePage() {
   const related = stores.filter((s) => s.category === store.category && s.slug !== store.slug).slice(0, 4);
 
   const brandUrl = `https://www.google.com/search?q=${encodeURIComponent(store.name + " official site")}`;
+  const content = getBrandContent(store);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
