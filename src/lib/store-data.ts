@@ -345,3 +345,11 @@ const _legacyStores: Store[] = [
   },
 ];
 void _legacyStores;
+/** Resolve where a "Get deal / Shop" button should send the shopper. */
+export function shopUrl(store: Store, coupon?: Coupon): string {
+  return (
+    coupon?.landingUrl ||
+    store.websiteUrl ||
+    `https://www.google.com/search?q=${encodeURIComponent(store.name + " official site")}`
+  );
+}
