@@ -125,6 +125,103 @@ function StorePage() {
         ))}
       </div>
 
+      <div className="mt-16 grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-8">
+          <section className="rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+              <Info className="h-5 w-5" /> About {store.name}
+            </h2>
+            <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+              {content.about.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              {content.highlights.map((h) => (
+                <li key={h} className="flex items-start gap-2 text-sm font-bold">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> {h}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+              <Sparkles className="h-5 w-5" /> How to use a {store.name} coupon
+            </h2>
+            <ol className="mt-4 space-y-3">
+              {content.howTo.map((step, i) => (
+                <li key={i} className="flex gap-3 text-sm text-muted-foreground">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 border-foreground bg-accent text-xs font-black text-accent-foreground">
+                    {i + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+              <BookOpen className="h-5 w-5" /> {store.name} guides &amp; blog
+            </h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {content.articles.map((a) => (
+                <article key={a.title} className="rounded-md border-2 border-foreground bg-background p-4">
+                  <h3 className="font-display text-base font-black leading-tight">{a.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{a.excerpt}</p>
+                  <div className="mt-3 text-[10px] font-black uppercase tracking-widest text-primary">{a.readMinutes} min read</div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+              <HelpCircle className="h-5 w-5" /> {store.name} FAQ
+            </h2>
+            <dl className="mt-4 divide-y-2 divide-dashed divide-foreground/30">
+              {content.faqs.map((f) => (
+                <div key={f.q} className="py-4 first:pt-0 last:pb-0">
+                  <dt className="font-display text-base font-black">{f.q}</dt>
+                  <dd className="mt-1 text-sm text-muted-foreground">{f.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </div>
+
+        <aside className="space-y-6">
+          <div className="rounded-md border-2 border-foreground bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="font-display text-lg font-black uppercase">{store.name} at a glance</h2>
+            <dl className="mt-4 space-y-3">
+              {content.facts.map((f) => (
+                <div key={f.label} className="flex items-center justify-between border-b-2 border-dashed border-foreground/30 pb-2 last:border-0 last:pb-0">
+                  <dt className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{f.label}</dt>
+                  <dd className="font-display text-lg font-black">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <a
+              href={brandUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-foreground bg-primary px-4 py-3 text-sm font-black uppercase text-primary-foreground hover:bg-accent hover:text-accent-foreground"
+            >
+              <ExternalLink className="h-4 w-4" /> Visit {store.name}
+            </a>
+          </div>
+          <div className="rounded-md border-2 border-foreground bg-accent p-6 text-accent-foreground" style={{ boxShadow: "var(--shadow-card)" }}>
+            <h2 className="font-display text-lg font-black uppercase">Never miss a drop</h2>
+            <p className="mt-2 text-sm font-medium">
+              Save any {store.name} coupon to your favourites and we&apos;ll alert you whenever a new offer is added.
+            </p>
+            <Link to="/dashboard/saved" className="mt-4 inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-card px-4 py-2 text-xs font-black uppercase text-foreground">
+              View saved coupons
+            </Link>
+          </div>
+        </aside>
+      </div>
       {related.length > 0 && (
         <div className="mt-16">
           <h2 className="font-display text-2xl font-black uppercase">More in {store.category}</h2>
