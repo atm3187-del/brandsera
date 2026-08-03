@@ -286,7 +286,7 @@ function CouponsAdmin({
   coupons: CouponRow[]; stores: StoreRow[]; loading: boolean;
   selectedStore: string | null; setSelectedStore: (v: string | null) => void; onChange: () => void;
 }) {
-  const [form, setForm] = useState({ store_id: "", title: "", description: "", type: "deal" as "code" | "deal", code: "", uses: 0, verified: true });
+  const [form, setForm] = useState({ store_id: "", title: "", description: "", type: "deal" as "code" | "deal", code: "", landing_url: "", uses: 0, verified: true });
   const [err, setErr] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {
@@ -298,11 +298,12 @@ function CouponsAdmin({
       description: form.description,
       type: form.type,
       code: form.type === "code" ? form.code : null,
+      landing_url: form.landing_url || null,
       uses: form.uses,
       verified: form.verified,
     });
     if (error) return setErr(error.message);
-    setForm({ store_id: form.store_id, title: "", description: "", type: "deal", code: "", uses: 0, verified: true });
+    setForm({ store_id: form.store_id, title: "", description: "", type: "deal", code: "", landing_url: "", uses: 0, verified: true });
     onChange();
   };
 
@@ -335,6 +336,7 @@ function CouponsAdmin({
             <input required placeholder="CODE" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm font-mono" />
           )}
           <input type="number" min={0} placeholder="Uses" value={form.uses} onChange={(e) => setForm({ ...form, uses: parseInt(e.target.value) || 0 })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input type="url" placeholder="Deal landing URL (optional)" value={form.landing_url} onChange={(e) => setForm({ ...form, landing_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
         </div>
         {err && <div className="text-sm font-bold text-destructive">{err}</div>}
         <button className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-5 py-2 text-sm font-black uppercase text-primary-foreground">
