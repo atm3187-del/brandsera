@@ -49,7 +49,7 @@ function StorePage() {
 
   const related = stores.filter((s) => s.category === store.category && s.slug !== store.slug).slice(0, 4);
 
-  const brandUrl = `https://www.google.com/search?q=${encodeURIComponent(store.name + " official site")}`;
+  const brandUrl = shopUrl(store);
   const content = getBrandContent(store);
 
   return (
@@ -103,7 +103,7 @@ function StorePage() {
                 </button>
               ) : (
                 <a
-                  href={brandUrl}
+                  href={shopUrl(store, c)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
@@ -112,7 +112,7 @@ function StorePage() {
                 </a>
               )}
               <a
-                href={brandUrl}
+                href={shopUrl(store, c)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs font-black uppercase text-primary hover:underline"
