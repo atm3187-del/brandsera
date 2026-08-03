@@ -10,6 +10,7 @@ export interface Coupon {
   uses: number;
   expiryDays: number;
   verified: boolean;
+  landingUrl?: string;
 }
 
 export interface Store {
@@ -19,6 +20,7 @@ export interface Store {
   category: string;
   description: string;
   coupons: Coupon[];
+  websiteUrl?: string;
   featured?: boolean;
   popular?: boolean;
   premium?: boolean;
@@ -46,12 +48,12 @@ function daysFromNow(iso: string | null): number {
 export async function fetchStores(): Promise<Store[]> {
   const { data: storeRows, error } = await supabase
     .from("stores")
-    .select("id,name,slug,category,description,featured,popular,premium")
+    .select("id,name,slug,category,description,website_url,featured,popular,premium")
     .order("name");
   if (error) throw error;
   const { data: couponRows, error: cErr } = await supabase
     .from("coupons")
-    .select("id,store_id,title,description,type,code,uses,expires_at,verified");
+    .select("id,store_id,title,description,type,code,uses,expires_at,verified,landing_url");
   if (cErr) throw cErr;
   const byStore = new Map<string, Coupon[]>();
   for (const c of couponRows ?? []) {
@@ -65,6 +67,7 @@ export async function fetchStores(): Promise<Store[]> {
       uses: c.uses,
       expiryDays: daysFromNow(c.expires_at),
       verified: c.verified,
+      landingUrl: c.landing_url ?? undefined,
     });
     byStore.set(c.store_id, list);
   }
@@ -74,6 +77,7 @@ export async function fetchStores(): Promise<Store[]> {
     slug: s.slug,
     category: s.category,
     description: s.description,
+    websiteUrl: s.website_url ?? undefined,
     featured: s.featured,
     popular: s.popular,
     premium: s.premium,
