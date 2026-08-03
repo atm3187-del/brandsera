@@ -1,4 +1,5 @@
 import { CheckCircle2, Copy, Heart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { BrandLogo } from "./BrandLogo";
 import type { Coupon, Store } from "@/lib/store-data";
 import { useFavorite } from "@/hooks/use-favorite";
@@ -30,11 +31,23 @@ export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) 
           </span>
         </div>
       </div>
-      <div className="mt-4 text-xs font-bold uppercase tracking-widest text-primary">{store.name}</div>
-      <h3 className="mt-1 font-display text-xl font-black leading-tight">{coupon.title}</h3>
+      <Link
+        to="/store/$slug"
+        params={{ slug: store.slug }}
+        className="mt-4 block text-xs font-bold uppercase tracking-widest text-primary hover:underline"
+      >
+        {store.name}
+      </Link>
+      <Link to="/store/$slug" params={{ slug: store.slug }} className="block">
+        <h3 className="mt-1 font-display text-xl font-black leading-tight hover:underline">{coupon.title}</h3>
+      </Link>
       <p className="mt-2 text-sm text-muted-foreground">{coupon.description}</p>
       <div className="mt-5 flex items-center justify-between pt-4 border-t-2 border-dashed border-foreground/30">
-        <button className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground">
+        <Link
+          to="/store/$slug"
+          params={{ slug: store.slug }}
+          className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+        >
           {coupon.type === "Code" ? (
             <>
               <Copy className="h-4 w-4" /> Get Code
@@ -42,7 +55,7 @@ export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) 
           ) : (
             <>Get Deal →</>
           )}
-        </button>
+        </Link>
         <span className="text-xs font-bold uppercase text-muted-foreground">{coupon.expiryDays}d left</span>
       </div>
     </div>
