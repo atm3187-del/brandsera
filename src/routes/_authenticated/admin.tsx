@@ -193,7 +193,7 @@ function AnalyticsAdmin() {
 }
 
 function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loading: boolean; onChange: () => void }) {
-  const [form, setForm] = useState({ name: "", slug: "", category: categories[0], description: "", featured: false, popular: false, premium: false });
+  const [form, setForm] = useState({ name: "", slug: "", category: categories[0], description: "", website_url: "", featured: false, popular: false, premium: false });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -204,7 +204,7 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
       if (error) throw error;
     },
     onSuccess: () => {
-      setForm({ name: "", slug: "", category: categories[0], description: "", featured: false, popular: false, premium: false });
+      setForm({ name: "", slug: "", category: categories[0], description: "", website_url: "", featured: false, popular: false, premium: false });
       onChange();
     },
     onError: (e: any) => setErr(e.message),
@@ -236,6 +236,7 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input type="url" placeholder="https://brand-official-site.com" value={form.website_url} onChange={(e) => setForm({ ...form, website_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
         </div>
         <div className="flex flex-wrap gap-4 text-sm font-bold">
           <label className="flex items-center gap-2"><input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} /> Featured</label>
