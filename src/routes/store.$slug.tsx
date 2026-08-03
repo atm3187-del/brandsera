@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData } from "@/lib/store-data";
+import { useStoresData, shopUrl } from "@/lib/store-data";
 import { getBrandContent } from "@/lib/brand-content";
 
 export const Route = createFileRoute("/store/$slug")({
