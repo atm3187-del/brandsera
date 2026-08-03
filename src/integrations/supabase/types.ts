@@ -54,6 +54,7 @@ export type Database = {
           description: string
           expires_at: string | null
           id: string
+          landing_url: string | null
           store_id: string
           title: string
           type: Database["public"]["Enums"]["coupon_type"]
@@ -67,6 +68,7 @@ export type Database = {
           description?: string
           expires_at?: string | null
           id?: string
+          landing_url?: string | null
           store_id: string
           title: string
           type?: Database["public"]["Enums"]["coupon_type"]
@@ -80,6 +82,7 @@ export type Database = {
           description?: string
           expires_at?: string | null
           id?: string
+          landing_url?: string | null
           store_id?: string
           title?: string
           type?: Database["public"]["Enums"]["coupon_type"]
