@@ -1,7 +1,7 @@
-import { CheckCircle2, Copy, Heart } from "lucide-react";
+import { CheckCircle2, Copy, ExternalLink, Heart } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { BrandLogo } from "./BrandLogo";
-import type { Coupon, Store } from "@/lib/store-data";
+import { shopUrl, type Coupon, type Store } from "@/lib/store-data";
 import { useFavorite } from "@/hooks/use-favorite";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -43,20 +43,35 @@ export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) 
       </Link>
       <p className="mt-2 text-sm text-muted-foreground">{coupon.description}</p>
       <div className="mt-5 flex items-center justify-between pt-4 border-t-2 border-dashed border-foreground/30">
-        <Link
-          to="/store/$slug"
-          params={{ slug: store.slug }}
-          className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
-        >
-          {coupon.type === "Code" ? (
-            <>
-              <Copy className="h-4 w-4" /> Get Code
-            </>
-          ) : (
-            <>Get Deal →</>
-          )}
-        </Link>
-        <span className="text-xs font-bold uppercase text-muted-foreground">{coupon.expiryDays}d left</span>
+        {coupon.type === "Code" ? (
+          <Link
+            to="/store/$slug"
+            params={{ slug: store.slug }}
+            className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+          >
+            <Copy className="h-4 w-4" /> Get Code
+          </Link>
+        ) : (
+          <a
+            href={shopUrl(store, coupon)}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+          >
+            <ExternalLink className="h-4 w-4" /> Get Deal
+          </a>
+        )}
+        <div className="flex items-center gap-3">
+          <a
+            href={shopUrl(store, coupon)}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="inline-flex items-center gap-1 text-xs font-black uppercase text-primary hover:underline"
+          >
+            Shop <ExternalLink className="h-3 w-3" />
+          </a>
+          <span className="text-xs font-bold uppercase text-muted-foreground">{coupon.expiryDays}d left</span>
+        </div>
       </div>
     </div>
   );
