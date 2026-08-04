@@ -1,0 +1,1 @@
+UPDATE public.stores SET slug='ohura', description=COALESCE(NULLIF(description,''),'Empowering self-expression through innovative, high-quality gel nail strips.') WHERE name='Ohura';

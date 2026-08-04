@@ -72,9 +72,25 @@ export function Footer() {
             </div>
           ))}
         </div>
+        <div className="mt-10 grid gap-4 rounded-md border-2 border-background/30 bg-background/5 p-6 text-center sm:grid-cols-[minmax(0,1fr)_auto] sm:text-left">
+          <div className="min-w-0">
+            <div className="font-display text-lg font-black uppercase">Never pay full price again</div>
+            <p className="mt-1 text-sm text-background/70">
+              New verified codes land daily across 5,000+ brands.
+            </p>
+          </div>
+          <Link
+            to="/stores"
+            className="inline-flex items-center justify-center self-center rounded-md border-2 border-background bg-accent px-6 py-3 text-sm font-black uppercase text-accent-foreground hover:opacity-90"
+          >
+            Browse Deals
+          </Link>
+        </div>
         <div className="mt-10 border-t border-background/20 pt-6 text-center text-xs uppercase tracking-widest text-background/60">
           © {new Date().getFullYear()} Brands Era. All rights reserved.
         </div>
+        {/* Breathing room so the floating badge never overlaps footer content */}
+        <div aria-hidden className="h-16 md:h-12" />
       </div>
     </footer>
   );
