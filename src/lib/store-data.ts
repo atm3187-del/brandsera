@@ -345,11 +345,35 @@ const _legacyStores: Store[] = [
   },
 ];
 void _legacyStores;
-/** Resolve where a "Get deal / Shop" button should send the shopper. */
+/** Normalize a stored URL: trim, ignore blanks/placeholders, add a scheme, validate. */
+function normalizeUrl(raw?: string | null): string | undefined {
+  if (!raw) return undefined;
+  const value = raw.trim();
+  if (!value) return undefined;
+  if (/^(null|undefined|n\/a|#|-)$/i.test(value)) return undefined;
+  const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value.replace(/^\/+/, "")}`;
+  try {
+    const url = new URL(withScheme);
+    if (!url.hostname.includes(".")) return undefined;
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Resolve where a "Get deal / Shop / Visit store" button should send the shopper.
+ * Falls back: coupon landing page -> brand homepage -> brand search page.
+ */
 export function shopUrl(store: Store, coupon?: Coupon): string {
   return (
-    coupon?.landingUrl ||
-    store.websiteUrl ||
-    `https://www.google.com/search?q=${encodeURIComponent(store.name + " official site")}`
+    normalizeUrl(coupon?.landingUrl) ||
+    normalizeUrl(store.websiteUrl) ||
+    `https://www.google.com/search?q=${encodeURIComponent(`${store.name} official site`)}`
   );
+}
+
+/** True when we have a real brand/coupon destination (not the search fallback). */
+export function hasDirectShopUrl(store: Store, coupon?: Coupon): boolean {
+  return Boolean(normalizeUrl(coupon?.landingUrl) || normalizeUrl(store.websiteUrl));
 }
