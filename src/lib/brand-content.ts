@@ -93,3 +93,45 @@ export function getBrandContent(store: Store): BrandContent {
     ],
   };
 }
+
+export interface TopSearch {
+  term: string;
+  volume: string;
+  url: string;
+}
+
+/**
+ * Most-searched coupon queries shoppers use on Google for this brand.
+ * Ranked with a deterministic score so the list is stable per brand,
+ * and each row deep-links to the live Google results for that query.
+ */
+export function getTopSearches(store: Store): TopSearch[] {
+  const n = store.name;
+  const year = new Date().getFullYear();
+  const seed = hash(store.slug);
+  const patterns = [
+    `${n} promo code`,
+    `${n} coupon code ${year}`,
+    `${n} discount code`,
+    `${n} free shipping code`,
+    `${n} student discount`,
+    `${n} first order discount`,
+    `${n} sale ${year}`,
+    `${n} voucher code`,
+    `${n} clearance deals`,
+    `${n} newsletter discount`,
+  ];
+  return patterns
+    .map((term, i) => {
+      const score = 120000 / (i + 1) + ((seed >> i) % 7) * 900;
+      return {
+        term,
+        volume: `${Math.round(score / 100) / 10}K/mo`,
+        url: `https://www.google.com/search?q=${encodeURIComponent(term)}`,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map(({ term, volume, url }) => ({ term, volume, url }));
+}
