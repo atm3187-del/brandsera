@@ -17,13 +17,18 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PopularStoresRouteImport } from './routes/popular-stores'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeaturedStoresRouteImport } from './routes/featured-stores'
+import { Route as DisclosureRouteImport } from './routes/disclosure'
+import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardSavedRouteImport } from './routes/_authenticated/dashboard.saved'
@@ -70,6 +75,16 @@ const FeaturedStoresRoute = FeaturedStoresRouteImport.update({
   path: '/featured-stores',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DisclosureRoute = DisclosureRouteImport.update({
+  id: '/disclosure',
+  path: '/disclosure',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiePolicyRoute = CookiePolicyRouteImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -78,6 +93,11 @@ const ContactRoute = ContactRouteImport.update({
 const CategoriesRoute = CategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -99,9 +119,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoreSlugRoute = StoreSlugRouteImport.update({
   id: '/store/$slug',
   path: '/store/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -137,8 +167,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/disclosure': typeof DisclosureRoute
   '/featured-stores': typeof FeaturedStoresRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
@@ -149,7 +182,9 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
@@ -158,8 +193,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/disclosure': typeof DisclosureRoute
   '/featured-stores': typeof FeaturedStoresRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
@@ -170,7 +208,9 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
@@ -181,8 +221,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/disclosure': typeof DisclosureRoute
   '/featured-stores': typeof FeaturedStoresRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/popular-stores': typeof PopularStoresRoute
@@ -193,7 +236,9 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/_authenticated/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
@@ -204,8 +249,11 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/categories'
     | '/contact'
+    | '/cookie-policy'
+    | '/disclosure'
     | '/featured-stores'
     | '/forgot-password'
     | '/popular-stores'
@@ -216,7 +264,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/dashboard'
+    | '/blog/$slug'
     | '/store/$slug'
+    | '/blog/'
     | '/dashboard/alerts'
     | '/dashboard/profile'
     | '/dashboard/saved'
@@ -225,8 +275,11 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/categories'
     | '/contact'
+    | '/cookie-policy'
+    | '/disclosure'
     | '/featured-stores'
     | '/forgot-password'
     | '/popular-stores'
@@ -237,7 +290,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/dashboard'
+    | '/blog/$slug'
     | '/store/$slug'
+    | '/blog'
     | '/dashboard/alerts'
     | '/dashboard/profile'
     | '/dashboard/saved'
@@ -247,8 +302,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/categories'
     | '/contact'
+    | '/cookie-policy'
+    | '/disclosure'
     | '/featured-stores'
     | '/forgot-password'
     | '/popular-stores'
@@ -259,7 +317,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/blog/$slug'
     | '/store/$slug'
+    | '/blog/'
     | '/_authenticated/dashboard/alerts'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/saved'
@@ -270,8 +330,11 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  CareersRoute: typeof CareersRoute
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
+  CookiePolicyRoute: typeof CookiePolicyRoute
+  DisclosureRoute: typeof DisclosureRoute
   FeaturedStoresRoute: typeof FeaturedStoresRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   PopularStoresRoute: typeof PopularStoresRoute
@@ -280,7 +343,9 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   StoresRoute: typeof StoresRoute
   TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   StoreSlugRoute: typeof StoreSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -341,6 +406,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeaturedStoresRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/disclosure': {
+      id: '/disclosure'
+      path: '/disclosure'
+      fullPath: '/disclosure'
+      preLoaderRoute: typeof DisclosureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -353,6 +432,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/categories'
       preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -383,11 +469,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/store/$slug': {
       id: '/store/$slug'
       path: '/store/$slug'
       fullPath: '/store/$slug'
       preLoaderRoute: typeof StoreSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -464,8 +564,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  CareersRoute: CareersRoute,
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
+  CookiePolicyRoute: CookiePolicyRoute,
+  DisclosureRoute: DisclosureRoute,
   FeaturedStoresRoute: FeaturedStoresRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   PopularStoresRoute: PopularStoresRoute,
@@ -474,7 +577,9 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   StoresRoute: StoresRoute,
   TermsRoute: TermsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   StoreSlugRoute: StoreSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
