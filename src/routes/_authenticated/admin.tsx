@@ -42,7 +42,7 @@ type CouponRow = {
 
 function AdminPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"analytics" | "stores" | "coupons">("analytics");
+  const [tab, setTab] = useState<"analytics" | "stores" | "coupons" | "blogs">("analytics");
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
   const storesQ = useQuery({
@@ -82,7 +82,7 @@ function AdminPage() {
       </div>
 
       <div className="mb-6 flex gap-2 border-b-2 border-foreground">
-        {(["analytics", "stores", "coupons"] as const).map((t) => (
+        {(["analytics", "stores", "coupons", "blogs"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -107,6 +107,8 @@ function AdminPage() {
           onChange={invalidate}
         />
       )}
+      {tab === "blogs" && <BlogsAdmin stores={storesQ.data ?? []} />}
+
     </div>
   );
 }
