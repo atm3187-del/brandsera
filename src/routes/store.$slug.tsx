@@ -55,6 +55,8 @@ function StorePage() {
 
   const brandUrl = shopUrl(store);
   const content = getBrandContent(store);
+  const topSearches = getTopSearches(store);
+
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
