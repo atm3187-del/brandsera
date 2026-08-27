@@ -9,9 +9,11 @@ const navLinks = [
   { to: "/", label: "Home" },
   { to: "/stores", label: "All Stores" },
   { to: "/categories", label: "Categories" },
+  { to: "/blog", label: "Blogs" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
+
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

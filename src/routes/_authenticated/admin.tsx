@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, ShieldCheck, ArrowLeft, BarChart3, Users, Store as StoreIcon, Ticket } from "lucide-react";
 import { categories } from "@/lib/store-data";
+import { slugify } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Brands Era" }] }),
@@ -42,7 +43,7 @@ type CouponRow = {
 
 function AdminPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"analytics" | "stores" | "coupons">("analytics");
+  const [tab, setTab] = useState<"analytics" | "stores" | "coupons" | "blogs">("analytics");
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
   const storesQ = useQuery({
@@ -82,7 +83,7 @@ function AdminPage() {
       </div>
 
       <div className="mb-6 flex gap-2 border-b-2 border-foreground">
-        {(["analytics", "stores", "coupons"] as const).map((t) => (
+        {(["analytics", "stores", "coupons", "blogs"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -107,6 +108,8 @@ function AdminPage() {
           onChange={invalidate}
         />
       )}
+      {tab === "blogs" && <BlogsAdmin stores={storesQ.data ?? []} />}
+
     </div>
   );
 }
@@ -365,6 +368,164 @@ function CouponsAdmin({
                   </div>
                 </div>
                 <button onClick={() => del(c.id)} className="rounded-md border-2 border-foreground bg-destructive px-3 py-1.5 text-xs font-black uppercase text-destructive-foreground">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+type BlogRow = {
+  id: string;
+  store_id: string | null;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_url: string | null;
+  published: boolean;
+  created_at: string;
+};
+
+function BlogsAdmin({ stores }: { stores: StoreRow[] }) {
+  const qc = useQueryClient();
+  const empty = { id: "", store_id: "", title: "", slug: "", excerpt: "", content: "", cover_url: "", published: true };
+  const [form, setForm] = useState(empty);
+  const [err, setErr] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const postsQ = useQuery({
+    queryKey: ["admin-blog-posts"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as BlogRow[];
+    },
+  });
+
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["admin-blog-posts"] });
+    qc.invalidateQueries({ queryKey: ["blog-posts"] });
+    qc.invalidateQueries({ queryKey: ["blog-posts-store"] });
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(null);
+    setSaving(true);
+    const payload = {
+      store_id: form.store_id || null,
+      title: form.title,
+      slug: form.slug || slugify(form.title),
+      excerpt: form.excerpt,
+      content: form.content,
+      cover_url: form.cover_url || null,
+      published: form.published,
+    };
+    const { error } = form.id
+      ? await supabase.from("blog_posts").update(payload).eq("id", form.id)
+      : await supabase.from("blog_posts").insert(payload);
+    setSaving(false);
+    if (error) return setErr(error.message);
+    setForm(empty);
+    refresh();
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this blog post?")) return;
+    const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+    if (error) return alert(error.message);
+    refresh();
+  };
+
+  const edit = (p: BlogRow) =>
+    setForm({
+      id: p.id,
+      store_id: p.store_id ?? "",
+      title: p.title,
+      slug: p.slug,
+      excerpt: p.excerpt,
+      content: p.content,
+      cover_url: p.cover_url ?? "",
+      published: p.published,
+    });
+
+  const posts = postsQ.data ?? [];
+
+  return (
+    <div className="space-y-8">
+      <form onSubmit={submit} className="rounded-md border-2 border-foreground bg-card p-6 space-y-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <h2 className="font-display text-xl font-black uppercase">{form.id ? "Edit Blog Post" : "Write a Blog Post"}</h2>
+        <div className="grid gap-3 md:grid-cols-2">
+          <select value={form.store_id} onChange={(e) => setForm({ ...form, store_id: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm">
+            <option value="">No brand (general post)</option>
+            {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+          <input
+            placeholder="url-slug (auto from title)"
+            value={form.slug}
+            onChange={(e) => setForm({ ...form, slug: e.target.value })}
+            className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm"
+          />
+          <input
+            required
+            placeholder="Post title"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value, slug: form.id ? form.slug : slugify(e.target.value) })}
+            className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2"
+          />
+          <input placeholder="Short excerpt" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+          <input type="url" placeholder="Cover image URL (optional)" value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+          <textarea
+            required
+            rows={10}
+            placeholder="Write your blog post here. Leave a blank line between paragraphs."
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2"
+          />
+        </div>
+        <label className="flex items-center gap-2 text-sm font-bold">
+          <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} /> Published
+        </label>
+        {err && <div className="text-sm font-bold text-destructive">{err}</div>}
+        <div className="flex gap-3">
+          <button disabled={saving} className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-5 py-2 text-sm font-black uppercase text-primary-foreground disabled:opacity-50">
+            <Plus className="h-4 w-4" /> {saving ? "Saving…" : form.id ? "Save changes" : "Publish post"}
+          </button>
+          {form.id && (
+            <button type="button" onClick={() => setForm(empty)} className="rounded-md border-2 border-foreground bg-card px-5 py-2 text-sm font-black uppercase">
+              Cancel
+            </button>
+          )}
+        </div>
+      </form>
+
+      <div className="rounded-md border-2 border-foreground bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="border-b-2 border-foreground p-4">
+          <h2 className="font-display text-xl font-black uppercase">Blog Posts ({posts.length})</h2>
+        </div>
+        {postsQ.isLoading ? (
+          <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+        ) : posts.length === 0 ? (
+          <div className="p-6 text-sm text-muted-foreground">No posts yet.</div>
+        ) : (
+          <div className="divide-y-2 divide-foreground/20">
+            {posts.map((p) => (
+              <div key={p.id} className="flex items-center gap-4 p-4">
+                <div className="min-w-0 flex-1">
+                  <div className="font-display font-black">{p.title}</div>
+                  <div className="truncate text-xs font-bold uppercase text-muted-foreground">
+                    /blog/{p.slug} · {stores.find((s) => s.id === p.store_id)?.name ?? "General"} · {p.published ? "Published" : "Draft"}
+                  </div>
+                </div>
+                <button onClick={() => edit(p)} className="rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-xs font-black uppercase">
+                  Edit
+                </button>
+                <button onClick={() => del(p.id)} className="rounded-md border-2 border-foreground bg-destructive px-3 py-1.5 text-xs font-black uppercase text-destructive-foreground">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>

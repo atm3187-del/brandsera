@@ -17,8 +17,8 @@ const footerLinks = [
     items: [
       { label: "About", to: "/about" },
       { label: "Contact", to: "/contact" },
-      { label: "Blog", to: "/" },
-      { label: "Careers", to: "/" },
+      { label: "Blog", to: "/blog" },
+      { label: "Careers", to: "/careers" },
     ],
   },
   {
@@ -26,11 +26,12 @@ const footerLinks = [
     items: [
       { label: "Privacy", to: "/privacy" },
       { label: "Terms", to: "/terms" },
-      { label: "Cookie Policy", to: "/privacy" },
-      { label: "Disclosure", to: "/terms" },
+      { label: "Cookie Policy", to: "/cookie-policy" },
+      { label: "Disclosure", to: "/disclosure" },
     ],
   },
 ];
+
 
 export function Footer() {
   return (
