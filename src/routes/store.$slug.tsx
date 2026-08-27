@@ -81,22 +81,39 @@ function StorePage() {
         <span className="text-sm font-bold text-muted-foreground">{store.coupons.length} offers</span>
       </div>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 space-y-4">
         {store.coupons.map((c) => (
-          <div key={c.id} className="rounded-md border-2 border-foreground bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
-            <div className="flex items-start justify-between">
+          <div
+            key={c.id}
+            className="flex flex-col gap-5 rounded-md border-2 border-foreground bg-card p-5 transition hover:-translate-y-0.5 md:flex-row md:items-center md:gap-6 md:p-6"
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            <div className="flex items-center gap-4 md:w-52 md:shrink-0 md:flex-col md:items-start md:gap-3 md:border-r-2 md:border-dashed md:border-foreground/25 md:pr-6">
               <BrandLogo name={store.name} />
-              <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
-                <CheckCircle2 className="h-3 w-3" /> {c.type}
+              <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-secondary px-2 py-0.5 text-[10px] font-black uppercase tracking-wide">
+                <CheckCircle2 className="h-3 w-3 text-primary" /> {c.type}
               </span>
             </div>
-            <h3 className="mt-4 font-display text-xl font-black leading-tight">{c.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{c.description}</p>
-            <div className="mt-5 flex items-center justify-between border-t-2 border-dashed border-foreground/30 pt-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-display text-xl font-black leading-tight md:text-2xl">{c.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{c.description}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-bold uppercase text-muted-foreground">
+                <span>{c.expiryDays}d left</span>
+                <a
+                  href={shopUrl(store, c)}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="inline-flex items-center gap-1 text-primary hover:underline"
+                >
+                  Shop {store.name} <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+            <div className="md:w-56 md:shrink-0">
               {c.type === "Code" && c.code ? (
                 <button
                   onClick={() => copyCode(c.code!, c.id)}
-                  className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-dashed border-foreground bg-primary px-4 py-3 text-sm font-black uppercase text-primary-foreground hover:opacity-90"
                 >
                   <Copy className="h-4 w-4" />
                   {copiedId === c.id ? "Copied!" : c.code}
@@ -105,25 +122,45 @@ function StorePage() {
                 <a
                   href={shopUrl(store, c)}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-accent px-4 py-2 text-sm font-black uppercase text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+                  rel="noopener noreferrer sponsored"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-foreground bg-primary px-4 py-3 text-sm font-black uppercase text-primary-foreground hover:opacity-90"
                 >
                   <ExternalLink className="h-4 w-4" /> Get Deal
                 </a>
               )}
-              <a
-                href={shopUrl(store, c)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-black uppercase text-primary hover:underline"
-              >
-                Shop <ExternalLink className="h-3 w-3" />
-              </a>
             </div>
-            <div className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{c.expiryDays}d left</div>
           </div>
         ))}
       </div>
+
+      {/* Top searches on Google for this brand */}
+      <section className="mt-12 rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
+        <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+          <TrendingUp className="h-5 w-5" /> Top searches for {store.name}
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          The {store.name} coupon, deal and discount queries shoppers search most on Google. Tap any row to see live results.
+        </p>
+        <div className="mt-5 divide-y-2 divide-dashed divide-foreground/25 border-y-2 border-foreground/25">
+          {topSearches.map((t, i) => (
+            <a
+              key={t.term}
+              href={t.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 py-3 hover:bg-secondary"
+            >
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-foreground bg-secondary text-xs font-black">
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm font-bold">{t.term}</span>
+              <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t.volume}</span>
+              <ExternalLink className="h-3.5 w-3.5 shrink-0 text-primary" />
+            </a>
+          ))}
+        </div>
+      </section>
+
 
       <div className="mt-16 grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-8">
