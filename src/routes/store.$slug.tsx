@@ -27,6 +27,8 @@ function StorePage() {
   const { stores, loading } = useStoresData();
   const store = stores.find((s) => s.slug === slug);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { data: brandPosts = [] } = useStoreBlogPosts(store?.id);
+
 
   if (loading) {
     return <div className="mx-auto max-w-3xl px-4 py-20 text-center text-muted-foreground font-medium">Loading…</div>;
