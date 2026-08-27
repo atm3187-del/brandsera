@@ -208,6 +208,26 @@ function StorePage() {
             <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
               <BookOpen className="h-5 w-5" /> {store.name} guides &amp; blog
             </h2>
+            {brandPosts.length > 0 && (
+              <div className="mt-5 space-y-3">
+                {brandPosts.map((p) => (
+                  <Link
+                    key={p.id}
+                    to="/blog/$slug"
+                    params={{ slug: p.slug }}
+                    className="flex flex-col gap-2 rounded-md border-2 border-foreground bg-background p-4 hover:bg-secondary sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <span className="min-w-0">
+                      <span className="block font-display text-base font-black leading-tight">{p.title}</span>
+                      <span className="mt-1 block text-sm text-muted-foreground">{p.excerpt}</span>
+                    </span>
+                    <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-primary">
+                      {formatDate(p.createdAt)}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {content.articles.map((a) => (
                 <article key={a.title} className="rounded-md border-2 border-foreground bg-background p-4">
@@ -217,6 +237,7 @@ function StorePage() {
                 </article>
               ))}
             </div>
+
           </section>
 
           <section className="rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
