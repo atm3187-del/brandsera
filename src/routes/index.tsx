@@ -86,7 +86,7 @@ function Index() {
           </h2>
           <p className="text-muted-foreground font-semibold uppercase text-xs tracking-widest">Updated Daily · 07/09/2026</p>
         </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 space-y-4">
           {hotDeals.map((d) => (
             <div
               key={d.id}

@@ -53,7 +53,7 @@ function SearchPage() {
           {matchingStores.length === 0 ? (
             <p className="mt-4 text-muted-foreground">No stores match.</p>
           ) : (
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <div className="mt-4 space-y-3">
               {matchingStores.map((s) => (
                 <Link
                   key={s.slug}
@@ -73,7 +73,7 @@ function SearchPage() {
           {matchingCoupons.length === 0 ? (
             <p className="mt-4 text-muted-foreground">No coupons match.</p>
           ) : (
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 space-y-3">
               {matchingCoupons.map((c) => (
                 <Link
                   key={c.id}
