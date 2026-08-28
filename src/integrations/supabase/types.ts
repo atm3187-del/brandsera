@@ -56,6 +56,7 @@ export type Database = {
           excerpt: string
           id: string
           published: boolean
+          section_id: string | null
           slug: string
           store_id: string | null
           title: string
@@ -69,6 +70,7 @@ export type Database = {
           excerpt?: string
           id?: string
           published?: boolean
+          section_id?: string | null
           slug: string
           store_id?: string | null
           title: string
@@ -82,6 +84,7 @@ export type Database = {
           excerpt?: string
           id?: string
           published?: boolean
+          section_id?: string | null
           slug?: string
           store_id?: string | null
           title?: string
@@ -89,7 +92,64 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "blog_posts_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "brand_sections"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "blog_posts_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brand_sections: {
+        Row: {
+          about: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          landing_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          store_id: string
+          updated_at: string
+        }
+        Insert: {
+          about?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          landing_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          store_id: string
+          updated_at?: string
+        }
+        Update: {
+          about?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          landing_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          store_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_sections_store_id_fkey"
             columns: ["store_id"]
             isOneToOne: false
             referencedRelation: "stores"
@@ -105,6 +165,7 @@ export type Database = {
           expires_at: string | null
           id: string
           landing_url: string | null
+          section_id: string | null
           store_id: string
           title: string
           type: Database["public"]["Enums"]["coupon_type"]
@@ -119,6 +180,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           landing_url?: string | null
+          section_id?: string | null
           store_id: string
           title: string
           type?: Database["public"]["Enums"]["coupon_type"]
@@ -133,6 +195,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           landing_url?: string | null
+          section_id?: string | null
           store_id?: string
           title?: string
           type?: Database["public"]["Enums"]["coupon_type"]
@@ -141,6 +204,13 @@ export type Database = {
           verified?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "coupons_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "brand_sections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "coupons_store_id_fkey"
             columns: ["store_id"]
@@ -200,6 +270,39 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      social_links: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          id: string
+          label: string
+          platform: string
+          sort_order: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          label?: string
+          platform: string
+          sort_order?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          label?: string
+          platform?: string
+          sort_order?: number
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }
