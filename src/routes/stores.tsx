@@ -74,7 +74,7 @@ function AllStoresPage() {
         <span className="text-sm font-bold text-muted-foreground">{filtered.length} Stores</span>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-8 space-y-3">
         {filtered.map((s) => (
           <Link
             key={s.slug}
