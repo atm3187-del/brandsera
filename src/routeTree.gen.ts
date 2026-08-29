@@ -31,6 +31,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as StoreSlugIndexRouteImport } from './routes/store.$slug.index'
+import { Route as StoreSlugSectionRouteImport } from './routes/store.$slug.$section'
 import { Route as AuthenticatedDashboardSavedRouteImport } from './routes/_authenticated/dashboard.saved'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardAlertsRouteImport } from './routes/_authenticated/dashboard.alerts'
@@ -144,6 +145,11 @@ const StoreSlugIndexRoute = StoreSlugIndexRouteImport.update({
   path: '/store/$slug/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StoreSlugSectionRoute = StoreSlugSectionRouteImport.update({
+  id: '/store/$slug/$section',
+  path: '/store/$slug/$section',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardSavedRoute =
   AuthenticatedDashboardSavedRouteImport.update({
     id: '/saved',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
+  '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug/': typeof StoreSlugIndexRoute
 }
 export interface FileRoutesByTo {
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
+  '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug': typeof StoreSlugIndexRoute
 }
 export interface FileRoutesById {
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
+  '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug/': typeof StoreSlugIndexRoute
 }
 export interface FileRouteTypes {
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/dashboard/alerts'
     | '/dashboard/profile'
     | '/dashboard/saved'
+    | '/store/$slug/$section'
     | '/store/$slug/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/dashboard/alerts'
     | '/dashboard/profile'
     | '/dashboard/saved'
+    | '/store/$slug/$section'
     | '/store/$slug'
   id:
     | '__root__'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/alerts'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/saved'
+    | '/store/$slug/$section'
     | '/store/$slug/'
   fileRoutesById: FileRoutesById
 }
@@ -345,6 +357,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  StoreSlugSectionRoute: typeof StoreSlugSectionRoute
   StoreSlugIndexRoute: typeof StoreSlugIndexRoute
 }
 
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/store/$slug/$section': {
+      id: '/store/$slug/$section'
+      path: '/store/$slug/$section'
+      fullPath: '/store/$slug/$section'
+      preLoaderRoute: typeof StoreSlugSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard/saved': {
       id: '/_authenticated/dashboard/saved'
       path: '/saved'
@@ -579,6 +599,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  StoreSlugSectionRoute: StoreSlugSectionRoute,
   StoreSlugIndexRoute: StoreSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
