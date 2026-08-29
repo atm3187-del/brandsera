@@ -46,7 +46,18 @@ const footerLinks = [
 ];
 
 
+function PinterestIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+      <path d="M12 2a10 10 0 0 0-3.65 19.31c-.09-.79-.17-2 .03-2.86.19-.79 1.2-5.04 1.2-5.04s-.31-.61-.31-1.52c0-1.42.83-2.49 1.85-2.49.87 0 1.29.66 1.29 1.44 0 .88-.56 2.19-.85 3.41-.24 1.02.51 1.85 1.52 1.85 1.83 0 3.23-1.93 3.23-4.71 0-2.46-1.77-4.18-4.3-4.18-2.93 0-4.65 2.2-4.65 4.47 0 .89.34 1.84.77 2.35.08.1.09.19.07.29-.08.32-.25.98-.28 1.12-.05.19-.15.23-.35.14-1.29-.6-2.1-2.48-2.1-4 0-3.25 2.36-6.24 6.81-6.24 3.57 0 6.35 2.55 6.35 5.95 0 3.55-2.24 6.41-5.34 6.41-1.04 0-2.02-.54-2.36-1.18l-.64 2.45c-.23.89-.86 2.01-1.28 2.69A10 10 0 1 0 12 2z" />
+    </svg>
+  );
+}
+
 export function Footer() {
+  const { data: socials = [] } = useSocialLinks();
+  const active = socials.filter((s) => s.enabled && s.url);
+
   return (
     <footer className="border-t-2 border-foreground bg-foreground text-background">
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6">
@@ -59,18 +70,36 @@ export function Footer() {
             <p className="mt-4 text-sm text-background/70">
               Save loud. Shop smart. Verified codes from thousands of brands.
             </p>
-            <div className="mt-4 flex gap-3">
-              <a href="#" aria-label="Twitter" className="rounded-md border border-background/30 p-2 hover:bg-background/10">
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a href="#" aria-label="Facebook" className="rounded-md border border-background/30 p-2 hover:bg-background/10">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" aria-label="Instagram" className="rounded-md border border-background/30 p-2 hover:bg-background/10">
-                <Instagram className="h-4 w-4" />
-              </a>
-            </div>
+            {active.length > 0 && (
+              <>
+                <div className="mt-5 text-xs font-black uppercase tracking-widest text-accent">Follow us</div>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {active.map((s) => {
+                    const Icon = socialIcons[s.platform] ?? Globe;
+                    const label = s.label || s.platform;
+                    return (
+                      <a
+                        key={s.id}
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        title={label}
+                        className="rounded-md border border-background/30 p-2 hover:bg-background/10"
+                      >
+                        {s.platform === "pinterest" ? (
+                          <PinterestIcon className="h-4 w-4" />
+                        ) : (
+                          <Icon className="h-4 w-4" />
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
+
           {footerLinks.map((col) => (
             <div key={col.title}>
               <div className="text-xs font-black uppercase tracking-widest text-accent">{col.title}</div>
