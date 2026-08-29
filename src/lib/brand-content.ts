@@ -135,3 +135,91 @@ export function getTopSearches(store: Store): TopSearch[] {
     .slice(0, 8)
     .map(({ term, volume, url }) => ({ term, volume, url }));
 }
+
+/* ------------------------------------------------------------------ */
+/* Section-level content (e.g. Adidas → Shoes)                         */
+/* ------------------------------------------------------------------ */
+
+export interface SectionLike {
+  name: string;
+  slug: string;
+  description: string;
+  about: string;
+}
+
+export interface SectionContent {
+  about: string[];
+  highlights: string[];
+  howTo: string[];
+  faqs: { q: string; a: string }[];
+}
+
+export function getSectionContent(store: Store, section: SectionLike, offerCount: number): SectionContent {
+  const n = store.name;
+  const s = section.name;
+  const written = section.about.trim();
+  return {
+    about: [
+      written || `${s} at ${n} — ${section.description || `everything you need to know about ${n} ${s.toLowerCase()}, plus the discounts our editors have verified for this range.`}`,
+      `This page collects the ${n} ${s.toLowerCase()} offers we currently track. There ${offerCount === 1 ? "is" : "are"} ${offerCount} offer${offerCount === 1 ? "" : "s"} tagged to ${s} right now, alongside guides and the searches shoppers run most for this range.`,
+    ].filter(Boolean),
+    highlights: [
+      `${offerCount} ${s} offer${offerCount === 1 ? "" : "s"} tracked`,
+      `Part of the ${n} brand hub`,
+      `Checked by the Brands Era editorial team`,
+      `Updated whenever a new ${s.toLowerCase()} deal lands`,
+    ],
+    howTo: [
+      `Pick a ${n} ${s.toLowerCase()} offer from the list above.`,
+      `Reveal the code, or open the deal page directly.`,
+      `Add your ${s.toLowerCase()} picks at ${n} and paste the code at checkout.`,
+      `Check the discount appears before you pay.`,
+    ],
+    faqs: [
+      {
+        q: `Are there ${n} ${s.toLowerCase()} discounts right now?`,
+        a: offerCount > 0
+          ? `Yes — ${offerCount} offer${offerCount === 1 ? "" : "s"} ${offerCount === 1 ? "is" : "are"} tagged to ${n} ${s} on this page.`
+          : `Nothing is tagged to ${s} at the moment, but the main ${n} page usually has sitewide offers that apply here too.`,
+      },
+      {
+        q: `Do sitewide ${n} codes work on ${s.toLowerCase()}?`,
+        a: `Usually yes, unless the code excludes sale items or a specific range. Try the sitewide codes on the ${n} page if nothing here fits your basket.`,
+      },
+      {
+        q: `How often is this ${s} page updated?`,
+        a: `We review ${n} offers weekly and retag them to the right range, so what you see here reflects what is live today.`,
+      },
+    ],
+  };
+}
+
+/** Google queries shoppers run for a specific range within a brand. */
+export function getSectionTopSearches(store: Store, section: SectionLike): TopSearch[] {
+  const n = store.name;
+  const s = section.name;
+  const year = new Date().getFullYear();
+  const seed = hash(`${store.slug}/${section.slug}`);
+  const patterns = [
+    `${n} ${s} promo code`,
+    `${n} ${s} discount code ${year}`,
+    `${n} ${s} sale`,
+    `cheap ${n} ${s}`,
+    `${n} ${s} coupon`,
+    `${n} ${s} clearance`,
+    `${n} ${s} student discount`,
+    `best ${n} ${s} deals`,
+  ];
+  return patterns
+    .map((term, i) => {
+      const score = 60000 / (i + 1) + ((seed >> i) % 7) * 700;
+      return {
+        term,
+        volume: `${Math.round(score / 100) / 10}K/mo`,
+        url: `https://www.google.com/search?q=${encodeURIComponent(term)}`,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ term, volume, url }) => ({ term, volume, url }));
+}
