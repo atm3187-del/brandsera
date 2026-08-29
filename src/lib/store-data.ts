@@ -11,6 +11,7 @@ export interface Coupon {
   expiryDays: number;
   verified: boolean;
   landingUrl?: string;
+  sectionId?: string | null;
 }
 
 export interface Store {
@@ -53,7 +54,7 @@ export async function fetchStores(): Promise<Store[]> {
   if (error) throw error;
   const { data: couponRows, error: cErr } = await supabase
     .from("coupons")
-    .select("id,store_id,title,description,type,code,uses,expires_at,verified,landing_url");
+    .select("id,store_id,title,description,type,code,uses,expires_at,verified,landing_url,section_id");
   if (cErr) throw cErr;
   const byStore = new Map<string, Coupon[]>();
   for (const c of couponRows ?? []) {
@@ -68,6 +69,7 @@ export async function fetchStores(): Promise<Store[]> {
       expiryDays: daysFromNow(c.expires_at),
       verified: c.verified,
       landingUrl: c.landing_url ?? undefined,
+      sectionId: c.section_id ?? null,
     });
     byStore.set(c.store_id, list);
   }
