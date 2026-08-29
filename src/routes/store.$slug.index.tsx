@@ -7,7 +7,7 @@ import { getBrandContent, getTopSearches } from "@/lib/brand-content";
 import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
 
 
-export const Route = createFileRoute("/store/$slug")({
+export const Route = createFileRoute("/store/$slug/")({
   head: ({ params }) => {
     const name = params.slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
     return {
