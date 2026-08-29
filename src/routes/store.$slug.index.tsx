@@ -86,8 +86,8 @@ function StorePage() {
         </div>
       </div>
 
-      <div className="mt-12 flex items-end justify-between border-b-2 border-foreground pb-4">
       {sections.length > 0 && (
+
         <section className="mt-12">
           <div className="flex items-end justify-between border-b-2 border-foreground pb-4">
             <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
