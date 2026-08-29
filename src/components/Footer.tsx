@@ -1,6 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import { Twitter, Facebook, Instagram } from "lucide-react";
+import { Twitter, Facebook, Instagram, Youtube, Linkedin, Globe, Music2, type LucideIcon } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useSocialLinks } from "@/lib/social-links";
+
+const socialIcons: Record<string, LucideIcon> = {
+  twitter: Twitter,
+  facebook: Facebook,
+  instagram: Instagram,
+  youtube: Youtube,
+  linkedin: Linkedin,
+  tiktok: Music2,
+  pinterest: Globe,
+  website: Globe,
+};
+
 
 const footerLinks = [
   {
