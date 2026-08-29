@@ -30,6 +30,8 @@ function StorePage() {
   const store = stores.find((s) => s.slug === slug);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { data: brandPosts = [] } = useStoreBlogPosts(store?.id);
+  const { data: sections = [] } = useBrandSections(store?.id);
+
 
 
   if (loading) {
