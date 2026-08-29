@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp } from "lucide-react";
+import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp, LayoutGrid, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData, shopUrl } from "@/lib/store-data";
 import { getBrandContent, getTopSearches } from "@/lib/brand-content";
 import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
+import { useBrandSections } from "@/lib/section-data";
+
 
 
 export const Route = createFileRoute("/store/$slug/")({
