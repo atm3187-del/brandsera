@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp } from "lucide-react";
+import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp, LayoutGrid, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData, shopUrl } from "@/lib/store-data";
 import { getBrandContent, getTopSearches } from "@/lib/brand-content";
 import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
+import { useBrandSections } from "@/lib/section-data";
 
 
-export const Route = createFileRoute("/store/$slug")({
+
+export const Route = createFileRoute("/store/$slug/")({
   head: ({ params }) => {
     const name = params.slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
     return {
@@ -28,6 +30,8 @@ function StorePage() {
   const store = stores.find((s) => s.slug === slug);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { data: brandPosts = [] } = useStoreBlogPosts(store?.id);
+  const { data: sections = [] } = useBrandSections(store?.id);
+
 
 
   if (loading) {
@@ -82,8 +86,46 @@ function StorePage() {
         </div>
       </div>
 
+      {sections.length > 0 && (
+
+        <section className="mt-12">
+          <div className="flex items-end justify-between border-b-2 border-foreground pb-4">
+            <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
+              <LayoutGrid className="h-5 w-5" /> {store.name} categories
+            </h2>
+            <span className="text-sm font-bold text-muted-foreground">{sections.length} sections</span>
+          </div>
+          <div className="mt-6 space-y-3">
+            {sections.map((sec) => {
+              const count = store.coupons.filter((c) => c.sectionId === sec.id).length;
+              return (
+                <Link
+                  key={sec.id}
+                  to="/store/$slug/$section"
+                  params={{ slug: store.slug, section: sec.slug }}
+                  className="flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-5 transition hover:-translate-y-0.5 hover:bg-secondary"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="font-display text-xl font-black uppercase leading-tight">{sec.name}</div>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                      {sec.description || `${store.name} ${sec.name.toLowerCase()} deals, guides and top searches.`}
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    {count} offer{count === 1 ? "" : "s"}
+                  </span>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-primary" />
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <div className="mt-12 flex items-end justify-between border-b-2 border-foreground pb-4">
         <h2 className="font-display text-2xl font-black uppercase">Active Coupons & Deals</h2>
+
         <span className="text-sm font-bold text-muted-foreground">{store.coupons.length} offers</span>
       </div>
 

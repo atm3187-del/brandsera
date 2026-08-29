@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface BlogPost {
   id: string;
   storeId: string | null;
+  sectionId: string | null;
   storeName: string | null;
   storeSlug: string | null;
   title: string;
@@ -18,6 +19,7 @@ export interface BlogPost {
 type Row = {
   id: string;
   store_id: string | null;
+  section_id: string | null;
   title: string;
   slug: string;
   excerpt: string;
@@ -32,6 +34,7 @@ function map(r: Row): BlogPost {
   return {
     id: r.id,
     storeId: r.store_id,
+    sectionId: r.section_id,
     storeName: r.stores?.name ?? null,
     storeSlug: r.stores?.slug ?? null,
     title: r.title,
@@ -47,7 +50,7 @@ function map(r: Row): BlogPost {
 export async function fetchPosts(): Promise<BlogPost[]> {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id,store_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
+    .select("id,store_id,section_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
     .eq("published", true)
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -64,7 +67,7 @@ export function useBlogPost(slug: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("id,store_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
+        .select("id,store_id,section_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
@@ -81,7 +84,7 @@ export function useStoreBlogPosts(storeId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("id,store_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
+        .select("id,store_id,section_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
         .eq("store_id", storeId!)
         .eq("published", true)
         .order("created_at", { ascending: false });
@@ -101,4 +104,22 @@ export function slugify(s: string) {
 
 export function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+/** Posts written for one section of a brand. */
+export function useSectionBlogPosts(sectionId: string | undefined) {
+  return useQuery({
+    enabled: !!sectionId,
+    queryKey: ["blog-posts-section", sectionId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("id,store_id,section_id,title,slug,excerpt,content,cover_url,published,created_at,stores(name,slug)")
+        .eq("section_id", sectionId!)
+        .eq("published", true)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return ((data ?? []) as unknown as Row[]).map(map);
+    },
+  });
 }
