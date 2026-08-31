@@ -555,3 +555,247 @@ function BlogsAdmin({ stores }: { stores: StoreRow[] }) {
     </div>
   );
 }
+
+/* ---------------- Brand sections ---------------- */
+
+function SectionsAdmin({ stores }: { stores: StoreRow[] }) {
+  const qc = useQueryClient();
+  const empty = { id: "", store_id: "", name: "", slug: "", description: "", about: "", image_url: "", landing_url: "", sort_order: 0 };
+  const [form, setForm] = useState(empty);
+  const [filter, setFilter] = useState("");
+  const [err, setErr] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const { data: sections = [], isLoading } = useAllBrandSections();
+
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["brand-sections-all"] });
+    qc.invalidateQueries({ queryKey: ["brand-sections"] });
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(null);
+    setSaving(true);
+    const payload = {
+      store_id: form.store_id,
+      name: form.name,
+      slug: form.slug || slugify(form.name),
+      description: form.description,
+      about: form.about,
+      image_url: form.image_url || null,
+      landing_url: form.landing_url || null,
+      sort_order: form.sort_order,
+    };
+    const { error } = form.id
+      ? await supabase.from("brand_sections").update(payload).eq("id", form.id)
+      : await supabase.from("brand_sections").insert(payload);
+    setSaving(false);
+    if (error) return setErr(error.message);
+    setForm({ ...empty, store_id: form.store_id });
+    refresh();
+  };
+
+  const edit = (s: BrandSection) =>
+    setForm({
+      id: s.id,
+      store_id: s.storeId,
+      name: s.name,
+      slug: s.slug,
+      description: s.description,
+      about: s.about,
+      image_url: s.imageUrl ?? "",
+      landing_url: s.landingUrl ?? "",
+      sort_order: s.sortOrder,
+    });
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this section? Its coupons and posts stay, but lose the section tag.")) return;
+    const { error } = await supabase.from("brand_sections").delete().eq("id", id);
+    if (error) return alert(error.message);
+    refresh();
+  };
+
+  const storeName = (id: string) => stores.find((s) => s.id === id)?.name ?? "—";
+  const shown = filter ? sections.filter((s) => s.storeId === filter) : sections;
+
+  return (
+    <div className="space-y-8">
+      <form onSubmit={submit} className="space-y-4 rounded-md border-2 border-foreground bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+        <h2 className="font-display text-xl font-black uppercase">{form.id ? "Edit Section" : "Add Brand Section"}</h2>
+        <p className="text-sm text-muted-foreground">
+          Sections are sub-pages inside a brand — e.g. Adidas → Shoes, Apparel, T-Shirts. Each gets its own page with about text,
+          offers, top searches and blog posts.
+        </p>
+        <div className="grid gap-3 md:grid-cols-2">
+          <select required value={form.store_id} onChange={(e) => setForm({ ...form, store_id: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm">
+            <option value="">Select brand…</option>
+            {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+          <input type="number" placeholder="Sort order" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input required placeholder="Section name (e.g. Shoes)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: form.id ? form.slug : slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input placeholder="url-slug (auto)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+          <input type="url" placeholder="Section image URL (optional)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input type="url" placeholder="Shop URL for this section (optional)" value={form.landing_url} onChange={(e) => setForm({ ...form, landing_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <textarea rows={6} placeholder="About this section (shown on the section page)" value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+        </div>
+        {err && <div className="text-sm font-bold text-destructive">{err}</div>}
+        <div className="flex gap-3">
+          <button disabled={saving} className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-5 py-2 text-sm font-black uppercase text-primary-foreground disabled:opacity-50">
+            <Plus className="h-4 w-4" /> {saving ? "Saving…" : form.id ? "Save changes" : "Add section"}
+          </button>
+          {form.id && (
+            <button type="button" onClick={() => setForm(empty)} className="rounded-md border-2 border-foreground bg-card px-5 py-2 text-sm font-black uppercase">
+              Cancel
+            </button>
+          )}
+        </div>
+      </form>
+
+      <div className="rounded-md border-2 border-foreground bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="flex flex-wrap items-center gap-3 border-b-2 border-foreground p-4">
+          <h2 className="font-display text-xl font-black uppercase">Sections ({shown.length})</h2>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="ml-auto rounded-md border-2 border-foreground bg-background px-3 py-1.5 text-xs font-bold">
+            <option value="">All brands</option>
+            {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+        </div>
+        {isLoading ? (
+          <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+        ) : shown.length === 0 ? (
+          <div className="p-6 text-sm text-muted-foreground">No sections yet.</div>
+        ) : (
+          <div className="divide-y-2 divide-foreground/20">
+            {shown.map((s) => (
+              <div key={s.id} className="flex items-center gap-4 p-4">
+                <div className="min-w-0 flex-1">
+                  <div className="font-display font-black uppercase">{s.name}</div>
+                  <div className="truncate text-xs font-bold uppercase text-muted-foreground">
+                    {storeName(s.storeId)} · /{s.slug}
+                  </div>
+                </div>
+                <button onClick={() => edit(s)} className="rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-xs font-black uppercase">Edit</button>
+                <button onClick={() => del(s.id)} className="rounded-md border-2 border-foreground bg-destructive px-3 py-1.5 text-xs font-black uppercase text-destructive-foreground">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Social links ---------------- */
+
+function SocialsAdmin() {
+  const qc = useQueryClient();
+  const empty = { id: "", platform: "pinterest", label: "Pinterest", url: "", sort_order: 0, enabled: true };
+  const [form, setForm] = useState(empty);
+  const [err, setErr] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const { data: links = [], isLoading } = useSocialLinks();
+
+  const refresh = () => qc.invalidateQueries({ queryKey: ["social-links"] });
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(null);
+    setSaving(true);
+    const payload = {
+      platform: form.platform,
+      label: form.label || form.platform,
+      url: form.url,
+      sort_order: form.sort_order,
+      enabled: form.enabled,
+    };
+    const { error } = form.id
+      ? await supabase.from("social_links").update(payload).eq("id", form.id)
+      : await supabase.from("social_links").insert(payload);
+    setSaving(false);
+    if (error) return setErr(error.message);
+    setForm(empty);
+    refresh();
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Remove this social link?")) return;
+    const { error } = await supabase.from("social_links").delete().eq("id", id);
+    if (error) return alert(error.message);
+    refresh();
+  };
+
+  const toggle = async (id: string, enabled: boolean) => {
+    const { error } = await supabase.from("social_links").update({ enabled }).eq("id", id);
+    if (error) return alert(error.message);
+    refresh();
+  };
+
+  return (
+    <div className="space-y-8">
+      <form onSubmit={submit} className="space-y-4 rounded-md border-2 border-foreground bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+        <h2 className="font-display text-xl font-black uppercase">{form.id ? "Edit Social Link" : "Add Social Link"}</h2>
+        <p className="text-sm text-muted-foreground">These appear under “Follow us” in the site footer. Add more whenever you open a new account.</p>
+        <div className="grid gap-3 md:grid-cols-2">
+          <select
+            value={form.platform}
+            onChange={(e) => setForm({ ...form, platform: e.target.value, label: e.target.value[0].toUpperCase() + e.target.value.slice(1) })}
+            className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm"
+          >
+            {socialPlatforms.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+          <input placeholder="Label" value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input required type="url" placeholder="https://www.pinterest.com/yourprofile" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+          <input type="number" placeholder="Sort order" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <label className="flex items-center gap-2 text-sm font-bold">
+            <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} /> Show in footer
+          </label>
+        </div>
+        {err && <div className="text-sm font-bold text-destructive">{err}</div>}
+        <div className="flex gap-3">
+          <button disabled={saving} className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-5 py-2 text-sm font-black uppercase text-primary-foreground disabled:opacity-50">
+            <Plus className="h-4 w-4" /> {saving ? "Saving…" : form.id ? "Save changes" : "Add link"}
+          </button>
+          {form.id && (
+            <button type="button" onClick={() => setForm(empty)} className="rounded-md border-2 border-foreground bg-card px-5 py-2 text-sm font-black uppercase">Cancel</button>
+          )}
+        </div>
+      </form>
+
+      <div className="rounded-md border-2 border-foreground bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="border-b-2 border-foreground p-4">
+          <h2 className="font-display text-xl font-black uppercase">Social Links ({links.length})</h2>
+        </div>
+        {isLoading ? (
+          <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+        ) : links.length === 0 ? (
+          <div className="p-6 text-sm text-muted-foreground">No social links yet.</div>
+        ) : (
+          <div className="divide-y-2 divide-foreground/20">
+            {links.map((l) => (
+              <div key={l.id} className="flex items-center gap-4 p-4">
+                <div className="min-w-0 flex-1">
+                  <div className="font-display font-black uppercase">{l.label || l.platform}</div>
+                  <div className="truncate text-xs font-bold text-muted-foreground">{l.url}</div>
+                </div>
+                <label className="flex items-center gap-2 text-xs font-black uppercase">
+                  <input type="checkbox" checked={l.enabled} onChange={(e) => toggle(l.id, e.target.checked)} /> Live
+                </label>
+                <button
+                  onClick={() => setForm({ id: l.id, platform: l.platform, label: l.label, url: l.url, sort_order: l.sortOrder, enabled: l.enabled })}
+                  className="rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-xs font-black uppercase"
+                >
+                  Edit
+                </button>
+                <button onClick={() => del(l.id)} className="rounded-md border-2 border-foreground bg-destructive px-3 py-1.5 text-xs font-black uppercase text-destructive-foreground">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
