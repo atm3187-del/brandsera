@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /auth
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /search
+Disallow: /api/
+
+Sitemap: https://brandsera.lovable.app/sitemap.xml
