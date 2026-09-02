@@ -28,6 +28,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -131,6 +132,11 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategorySlugRoute = CategorySlugRouteImport.update({
+  id: '/category/$slug',
+  path: '/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
   '/blog': typeof BlogIndexRoute
   '/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/dashboard/alerts': typeof AuthenticatedDashboardAlertsRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/blog/$slug'
+    | '/category/$slug'
     | '/blog/'
     | '/dashboard/alerts'
     | '/dashboard/profile'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/blog/$slug'
+    | '/category/$slug'
     | '/blog'
     | '/dashboard/alerts'
     | '/dashboard/profile'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/blog/$slug'
+    | '/category/$slug'
     | '/blog/'
     | '/_authenticated/dashboard/alerts'
     | '/_authenticated/dashboard/profile'
@@ -369,6 +381,7 @@ export interface RootRouteChildren {
   StoresRoute: typeof StoresRoute
   TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CategorySlugRoute: typeof CategorySlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   StoreSlugSectionRoute: typeof StoreSlugSectionRoute
   StoreSlugIndexRoute: typeof StoreSlugIndexRoute
@@ -509,6 +522,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/category/$slug': {
+      id: '/category/$slug'
+      path: '/category/$slug'
+      fullPath: '/category/$slug'
+      preLoaderRoute: typeof CategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -619,6 +639,7 @@ const rootRouteChildren: RootRouteChildren = {
   StoresRoute: StoresRoute,
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CategorySlugRoute: CategorySlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   StoreSlugSectionRoute: StoreSlugSectionRoute,
   StoreSlugIndexRoute: StoreSlugIndexRoute,
