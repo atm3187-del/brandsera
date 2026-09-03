@@ -5,7 +5,7 @@ import { Heart, Bell, User as UserIcon, ShieldCheck } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Brands Era" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: Dashboard,
 });
 

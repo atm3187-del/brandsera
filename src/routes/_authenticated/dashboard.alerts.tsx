@@ -5,7 +5,7 @@ import { ArrowLeft, Bell, Check, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/dashboard/alerts")({
-  head: () => ({ meta: [{ title: "Alerts — Brands Era" }] }),
+  head: () => ({ meta: [{ title: "Alerts — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: AlertsPage,
 });
 
