@@ -1,16 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd, categorySlug } from "@/lib/seo";
 import { Tag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { categories, useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/categories")({
-  head: () => ({
-    meta: [
-      { title: "Categories — Brands Era" },
-      { name: "description", content: "Explore deals by category on Brands Era. Fashion, electronics, travel, health, and more." },
-      { property: "og:title", content: "Categories — Brands Era" },
-      { property: "og:description", content: "Find verified coupons organized by category." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/categories',
+    title: 'Coupons by Category — Brands Era',
+    description: 'Explore verified deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.',
+    jsonLd: [collectionLd('Coupons by Category — Brands Era', 'Explore verified deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.', '/categories'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Coupons by Category', path: '/categories' }])]
   }),
   component: CategoriesPage,
 });
@@ -38,7 +38,9 @@ function CategoriesPage() {
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-md border-2 border-foreground bg-accent text-accent-foreground">
                 <Tag className="h-6 w-6" />
               </div>
-              <h2 className="mt-5 font-display text-xl font-black uppercase">{category}</h2>
+              <h2 className="mt-5 font-display text-xl font-black uppercase">
+                <Link to="/category/$slug" params={{ slug: categorySlug(category) }} className="hover:text-primary">{category}</Link>
+              </h2>
               <p className="mt-2 text-sm text-muted-foreground">{count} stores with active offers.</p>
               <div className="mt-4 space-y-2">
                 {stores

@@ -1,17 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead } from "@/lib/seo";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/search")({
-  head: () => ({
-    meta: [
-      { title: "Search — Brands Era" },
-      { name: "description", content: "Search for coupons, brands, and deals on Brands Era." },
-      { property: "og:title", content: "Search — Brands Era" },
-      { property: "og:description", content: "Find verified coupons and deals by brand or category." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/search',
+    title: 'Search — Brands Era',
+    description: 'Search for coupons, brands, and deals on Brands Era.',
+    noindex: true
   }),
   component: SearchPage,
 });

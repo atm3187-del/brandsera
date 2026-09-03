@@ -1,17 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { Search, Store } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/stores")({
-  head: () => ({
-    meta: [
-      { title: "All Stores — Brands Era" },
-      { name: "description", content: "Browse every verified store on Brands Era. Find coupons, deals, and discounts from thousands of brands." },
-      { property: "og:title", content: "All Stores — Brands Era" },
-      { property: "og:description", content: "Browse every verified store and unlock the latest coupons." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/stores',
+    title: 'All Stores — Coupons & Promo Codes by Brand — Brands Era',
+    description: 'Browse every brand on Brands Era and jump straight to its verified coupons, promo codes and deals.',
+    jsonLd: [collectionLd('All Stores — Coupons & Promo Codes by Brand — Brands Era', 'Browse every brand on Brands Era and jump straight to its verified coupons, promo codes and deals.', '/stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'All Stores', path: '/stores' }])]
   }),
   component: AllStoresPage,
 });

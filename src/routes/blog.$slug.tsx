@@ -1,20 +1,52 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Tag } from "lucide-react";
 import { useBlogPost, formatDate } from "@/lib/blog-data";
+import { getPostSeo } from "@/lib/seo.functions";
+import { SITE_NAME, SITE_URL, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
-  head: ({ params }) => {
-    const title = params.slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
-    return {
-      meta: [
-        { title: `${title} — Brands Era Blog` },
-        { name: "description", content: `${title} — savings guide and brand insight from Brands Era.` },
-        { property: "og:title", content: `${title} — Brands Era Blog` },
-        { property: "og:description", content: `${title} — savings guide from Brands Era.` },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
-      ],
-    };
+  loader: async ({ params }) => {
+    try {
+      return await getPostSeo({ data: { slug: params.slug } });
+    } catch {
+      return null;
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const path = `/blog/${params.slug}`;
+    const post = loaderData;
+    const title = post ? `${post.title} — Brands Era Blog` : `${titleize(params.slug)} — Brands Era Blog`;
+    const description = post?.excerpt || `${titleize(params.slug)} — savings guide and brand insight from Brands Era.`;
+    return seoHead({
+      path,
+      title,
+      description,
+      type: "article",
+      image: post?.cover_url ?? null,
+      noindex: post === null,
+      jsonLd: post
+        ? [
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: post.title,
+              description,
+              ...(post.cover_url ? { image: [post.cover_url] } : {}),
+              datePublished: post.created_at,
+              dateModified: post.updated_at,
+              author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+              publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL, logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.png` } },
+              mainEntityOfPage: `${SITE_URL}${path}`,
+              ...(post.stores ? { about: { "@type": "Organization", name: (post.stores as { name: string }).name } } : {}),
+            },
+            breadcrumbLd([
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: post.title, path },
+            ]),
+          ]
+        : undefined,
+    });
   },
   component: BlogPostPage,
 });

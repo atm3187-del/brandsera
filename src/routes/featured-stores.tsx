@@ -1,16 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { Sparkles } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/featured-stores")({
-  head: () => ({
-    meta: [
-      { title: "Featured Brands — Brands Era" },
-      { name: "description", content: "Hand-picked premium brands with the highest saving potential this week on Brands Era." },
-      { property: "og:title", content: "Featured Brands — Brands Era" },
-      { property: "og:description", content: "Premium brands with verified coupons and big savings." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/featured-stores',
+    title: 'Featured Stores — Hand-Picked Brand Deals — Brands Era',
+    description: 'Hand-picked brands with the strongest verified coupons and deals right now on Brands Era.',
+    jsonLd: [collectionLd('Featured Stores — Hand-Picked Brand Deals — Brands Era', 'Hand-picked brands with the strongest verified coupons and deals right now on Brands Era.', '/featured-stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Featured Stores', path: '/featured-stores' }])]
   }),
   component: FeaturedStoresPage,
 });

@@ -1,16 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { Briefcase } from "lucide-react";
 
 export const Route = createFileRoute("/careers")({
-  head: () => ({
-    meta: [
-      { title: "Careers — Work at Brands Era" },
-      { name: "description", content: "Join the Brands Era team. Open roles in editorial, engineering and partnerships for people obsessed with saving shoppers money." },
-      { property: "og:title", content: "Careers at Brands Era" },
-      { property: "og:description", content: "Open roles in editorial, engineering and partnerships." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
+  head: () =>
+    seoHead({
+    path: '/careers',
+    title: 'Careers at Brands Era',
+    description: 'Join the Brands Era team and help shoppers save on the brands they love.',
+    jsonLd: [collectionLd('Careers at Brands Era', 'Join the Brands Era team and help shoppers save on the brands they love.', '/careers'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Careers at Brands Era', path: '/careers' }])]
   }),
   component: CareersPage,
 });

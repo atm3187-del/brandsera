@@ -6,20 +6,58 @@ import { useStoresData, shopUrl } from "@/lib/store-data";
 import { getBrandContent, getTopSearches } from "@/lib/brand-content";
 import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
 import { useBrandSections } from "@/lib/section-data";
+import { getStoreSeo } from "@/lib/seo.functions";
+import { absUrl, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 
 
 
 export const Route = createFileRoute("/store/$slug/")({
-  head: ({ params }) => {
-    const name = params.slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
-    return {
-      meta: [
-        { title: `${name} Coupons & Deals — Brands Era` },
-        { name: "description", content: `Verified ${name} coupons and deals at Brands Era.` },
-        { property: "og:title", content: `${name} Coupons — Brands Era` },
-        { property: "og:description", content: `Verified coupons for ${name}.` },
+  loader: async ({ params }) => {
+    try {
+      return await getStoreSeo({ data: { slug: params.slug } });
+    } catch {
+      return null;
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const path = `/store/${params.slug}`;
+    const name = loaderData?.store.name ?? titleize(params.slug);
+    const codes = loaderData?.coupons.filter((c) => c.type === "code").length ?? 0;
+    const total = loaderData?.coupons.length ?? 0;
+    const title = `${name} Coupons & Promo Codes ${new Date().getFullYear()} — Brands Era`;
+    const description = loaderData
+      ? `${total} verified ${name} offer${total === 1 ? "" : "s"} (${codes} promo code${codes === 1 ? "" : "s"}). ${loaderData.store.description}`.trim()
+      : `Verified ${name} coupons, promo codes and deals at Brands Era.`;
+    const offers = (loaderData?.coupons ?? []).slice(0, 20).map((c) => ({
+      "@type": "Offer",
+      name: c.title,
+      description: c.description,
+      url: absUrl(path),
+      ...(c.expires_at ? { validThrough: c.expires_at } : {}),
+      seller: { "@type": "Organization", name },
+    }));
+    return seoHead({
+      path,
+      title,
+      description,
+      image: loaderData?.store.logo_url ?? null,
+      noindex: loaderData === null,
+      jsonLd: [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name,
+          url: loaderData?.store.website_url || absUrl(path),
+          ...(loaderData?.store.logo_url ? { logo: loaderData.store.logo_url } : {}),
+        },
+        ...(offers.length ? [{ "@context": "https://schema.org", "@type": "ItemList", name: `${name} coupons`, itemListElement: offers.map((o, i) => ({ "@type": "ListItem", position: i + 1, item: o })) }] : []),
+        breadcrumbLd([
+          { name: "Home", path: "/" },
+          { name: "Stores", path: "/stores" },
+          { name, path },
+        ]),
       ],
-    };
+    });
   },
   component: StorePage,
 });

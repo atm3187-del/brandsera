@@ -1,14 +1,16 @@
 import { useState, type FormEvent } from "react";
+import { seoHead } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/forgot-password")({
-  head: () => ({
-    meta: [
-      { title: "Reset password — Brands Era" },
-      { name: "description", content: "Request a password reset link for your Brands Era account." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/forgot-password',
+    title: 'Forgot password — Brands Era',
+    description: 'Reset your Brands Era password.',
+    noindex: true
   }),
   component: ForgotPasswordPage,
 });

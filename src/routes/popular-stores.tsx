@@ -1,16 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { TrendingUp } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/popular-stores")({
-  head: () => ({
-    meta: [
-      { title: "Popular Stores — Brands Era" },
-      { name: "description", content: "Most-clicked stores and top-used coupons on Brands Era right now." },
-      { property: "og:title", content: "Popular Stores — Brands Era" },
-      { property: "og:description", content: "Trending stores and the most-used coupons this week." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/popular-stores',
+    title: 'Popular Stores — Most-Used Coupons — Brands Era',
+    description: 'The brands shoppers use most on Brands Era, ranked by coupon redemptions.',
+    jsonLd: [collectionLd('Popular Stores — Most-Used Coupons — Brands Era', 'The brands shoppers use most on Brands Era, ranked by coupon redemptions.', '/popular-stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Popular Stores', path: '/popular-stores' }])]
   }),
   component: PopularStoresPage,
 });

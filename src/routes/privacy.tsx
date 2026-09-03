@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — Brands Era" },
-      { name: "description", content: "Brands Era privacy policy. Learn how we collect, use, and protect your data." },
-      { property: "og:title", content: "Privacy Policy — Brands Era" },
-      { property: "og:description", content: "How Brands Era handles your data and privacy." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/privacy',
+    title: 'Privacy Policy — Brands Era',
+    description: 'How Brands Era collects, uses and protects your personal data.'
   }),
   component: PrivacyPage,
 });

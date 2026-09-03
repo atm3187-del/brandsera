@@ -91,8 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Brands Era" },
       { property: "og:title", content: "Brands Era — The Smarter Way to Save Online" },
       { property: "og:description", content: "Verified promo codes from 5,000+ top brands, updated daily." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:site_name", content: "Brands Era" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [
       {
