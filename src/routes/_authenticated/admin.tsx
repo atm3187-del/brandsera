@@ -9,7 +9,7 @@ import { useSocialLinks, socialPlatforms } from "@/lib/social-links";
 import { slugify } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — Brands Era" }] }),
+  head: () => ({ meta: [{ title: "Admin — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
   beforeLoad: async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw redirect({ to: "/auth" });

@@ -1,16 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead } from "@/lib/seo";
 import { BadgeInfo } from "lucide-react";
 
 export const Route = createFileRoute("/disclosure")({
-  head: () => ({
-    meta: [
-      { title: "Affiliate Disclosure — Brands Era" },
-      { name: "description", content: "How Brands Era makes money, how affiliate commissions work, and why they never influence which coupons we publish." },
-      { property: "og:title", content: "Affiliate Disclosure — Brands Era" },
-      { property: "og:description", content: "How Brands Era makes money and stays editorially independent." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
+  head: () =>
+    seoHead({
+    path: '/disclosure',
+    title: 'Affiliate Disclosure — Brands Era',
+    description: 'How Brands Era earns commissions from partner brands and how that affects our listings.'
   }),
   component: DisclosurePage,
 });

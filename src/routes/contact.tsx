@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { useState } from "react";
 import { Mail, MessageSquare, Send, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — Brands Era" },
-      { name: "description", content: "Get in touch with the Brands Era support team. Questions, feedback, or partnership requests welcome." },
-      { property: "og:title", content: "Contact — Brands Era" },
-      { property: "og:description", content: "Contact Brands Era support for help with coupons and deals." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/contact',
+    title: 'Contact Brands Era',
+    description: 'Get in touch with the Brands Era team about coupons, partnerships or corrections.',
+    jsonLd: [collectionLd('Contact Brands Era', 'Get in touch with the Brands Era team about coupons, partnerships or corrections.', '/contact'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Contact Brands Era', path: '/contact' }])]
   }),
   component: ContactPage,
 });

@@ -7,7 +7,7 @@ import { CouponCard } from "@/components/CouponCard";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/_authenticated/dashboard/saved")({
-  head: () => ({ meta: [{ title: "Saved coupons — Brands Era" }] }),
+  head: () => ({ meta: [{ title: "Saved coupons — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: SavedPage,
 });
 

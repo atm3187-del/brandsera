@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { ShieldCheck, Zap, Copy, Users, Award } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Brands Era" },
-      { name: "description", content: "Learn how Brands Era tests and verifies coupons to help shoppers save money every day." },
-      { property: "og:title", content: "About — Brands Era" },
-      { property: "og:description", content: "Verified coupon codes and exclusive discounts from thousands of brands." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/about',
+    title: 'About Brands Era — How We Verify Coupons',
+    description: 'Learn how Brands Era tests and verifies coupons to help shoppers save money every day.',
+    jsonLd: [collectionLd('About Brands Era — How We Verify Coupons', 'Learn how Brands Era tests and verifies coupons to help shoppers save money every day.', '/about'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'About Brands Era', path: '/about' }])]
   }),
   component: AboutPage,
 });

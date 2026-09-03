@@ -1,15 +1,17 @@
 import { useState, type FormEvent } from "react";
+import { seoHead } from "@/lib/seo";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Chrome, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({
-    meta: [
-      { title: "Sign in — Brands Era" },
-      { name: "description", content: "Sign in or create your Brands Era account to save deals, get alerts, and unlock premium coupons." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/auth',
+    title: 'Sign in — Brands Era',
+    description: 'Sign in or create your Brands Era account.',
+    noindex: true
   }),
   component: AuthPage,
 });

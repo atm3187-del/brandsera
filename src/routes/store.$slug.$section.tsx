@@ -17,27 +17,41 @@ import { useStoresData, shopUrl } from "@/lib/store-data";
 import { useBrandSections } from "@/lib/section-data";
 import { getSectionContent, getSectionTopSearches } from "@/lib/brand-content";
 import { useSectionBlogPosts, formatDate } from "@/lib/blog-data";
-
-function titleize(s: string) {
-  return s.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
-}
+import { getSectionSeo } from "@/lib/seo.functions";
+import { breadcrumbLd, collectionLd, seoHead, titleize } from "@/lib/seo";
 
 export const Route = createFileRoute("/store/$slug/$section")({
-  head: ({ params }) => {
-    const brand = titleize(params.slug);
-    const sec = titleize(params.section);
+  loader: async ({ params }) => {
+    try {
+      return await getSectionSeo({ data: { slug: params.slug, section: params.section } });
+    } catch {
+      return null;
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const path = `/store/${params.slug}/${params.section}`;
+    const brand = loaderData?.store.name ?? titleize(params.slug);
+    const sec = loaderData?.section.name ?? titleize(params.section);
     const title = `${brand} ${sec} Coupons & Deals — Brands Era`;
-    const description = `Verified ${brand} ${sec.toLowerCase()} coupons, deals, guides and top searches at Brands Era.`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
+    const description =
+      loaderData?.section.description ||
+      `Verified ${brand} ${sec.toLowerCase()} coupons, deals, guides and top searches at Brands Era.`;
+    return seoHead({
+      path,
+      title,
+      description,
+      image: loaderData?.section.image_url ?? loaderData?.store.logo_url ?? null,
+      noindex: loaderData === null,
+      jsonLd: [
+        collectionLd(title, description, path),
+        breadcrumbLd([
+          { name: "Home", path: "/" },
+          { name: "Stores", path: "/stores" },
+          { name: brand, path: `/store/${params.slug}` },
+          { name: sec, path },
+        ]),
       ],
-    };
+    });
   },
   component: SectionPage,
 });

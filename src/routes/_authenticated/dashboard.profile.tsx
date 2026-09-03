@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, User as UserIcon, Save } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
-  head: () => ({ meta: [{ title: "Profile — Brands Era" }] }),
+  head: () => ({ meta: [{ title: "Profile — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
   component: ProfilePage,
 });
 

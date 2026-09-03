@@ -1,16 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead } from "@/lib/seo";
 import { Cookie } from "lucide-react";
 
 export const Route = createFileRoute("/cookie-policy")({
-  head: () => ({
-    meta: [
-      { title: "Cookie Policy — Brands Era" },
-      { name: "description", content: "How Brands Era uses cookies and similar technologies, and how you can control them in your browser." },
-      { property: "og:title", content: "Cookie Policy — Brands Era" },
-      { property: "og:description", content: "How Brands Era uses cookies and how to control them." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
+  head: () =>
+    seoHead({
+    path: '/cookie-policy',
+    title: 'Cookie Policy — Brands Era',
+    description: 'How Brands Era uses cookies and how you can control them.'
   }),
   component: CookiePolicyPage,
 });

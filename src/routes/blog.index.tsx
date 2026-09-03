@@ -1,17 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { BookOpen, ArrowRight } from "lucide-react";
 import { useBlogPosts, formatDate } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/blog/")({
-  head: () => ({
-    meta: [
-      { title: "Blog — Savings Guides & Brand News | Brands Era" },
-      { name: "description", content: "Shopping guides, brand deep-dives and coupon strategy from the Brands Era editorial team." },
-      { property: "og:title", content: "Brands Era Blog — Savings Guides & Brand News" },
-      { property: "og:description", content: "Shopping guides, brand deep-dives and coupon strategy." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: () =>
+    seoHead({
+    path: '/blog',
+    title: 'Blog — Savings Guides & Brand Insights — Brands Era',
+    description: 'Savings guides, brand deep-dives and coupon tips from the Brands Era editorial team.',
+    jsonLd: [collectionLd('Blog — Savings Guides & Brand Insights — Brands Era', 'Savings guides, brand deep-dives and coupon tips from the Brands Era editorial team.', '/blog'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Blog', path: '/blog' }])]
   }),
   component: BlogIndex,
 });

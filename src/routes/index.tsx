@@ -1,16 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { Search, CheckCircle2, Flame, Zap, ShieldCheck, Copy } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Brands Era — The Smarter Way to Save Online" },
-      { name: "description", content: "Find verified promo codes and exclusive discounts from 5,000+ top brands, updated daily." },
-      { property: "og:title", content: "Brands Era — The Smarter Way to Save Online" },
-      { property: "og:description", content: "Verified promo codes from 5,000+ top brands." },
-    ],
+  head: () =>
+    seoHead({
+    path: '/',
+    title: 'Brands Era — Verified Coupons, Promo Codes & Deals',
+    description: 'Find verified promo codes and exclusive discounts from top brands, tested daily by Brands Era editors. Save loudly.',
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+        potentialAction: { "@type": "SearchAction", target: `${SITE_URL}/search?q={search_term_string}`, "query-input": "required name=search_term_string" },
+      },
+      { "@context": "https://schema.org", "@type": "Organization", name: SITE_NAME, url: SITE_URL, logo: `${SITE_URL}/favicon.png` },
+    ]
   }),
   component: Index,
 });
