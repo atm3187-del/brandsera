@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Tag } from "lucide-react";
 import { useBlogPost, formatDate } from "@/lib/blog-data";
+import { BlogContent } from "@/components/BlogContent";
 import { getPostSeo } from "@/lib/seo.functions";
 import { SITE_NAME, SITE_URL, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 
