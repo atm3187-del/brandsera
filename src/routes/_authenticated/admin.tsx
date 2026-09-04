@@ -409,6 +409,52 @@ function BlogsAdmin({ stores }: { stores: StoreRow[] }) {
   const [form, setForm] = useState(empty);
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+
+  /** Insert text at the cursor position of the content textarea. */
+  const insertAtCursor = (text: string) => {
+    const el = contentRef.current;
+    setForm((s) => {
+      const start = el?.selectionStart ?? s.content.length;
+      const end = el?.selectionEnd ?? s.content.length;
+      const next = s.content.slice(0, start) + text + s.content.slice(end);
+      requestAnimationFrame(() => {
+        if (!el) return;
+        el.focus();
+        el.selectionStart = el.selectionEnd = start + text.length;
+      });
+      return { ...s, content: next };
+    });
+  };
+
+  const insertLink = () => {
+    const el = contentRef.current;
+    const selected = el ? el.value.slice(el.selectionStart, el.selectionEnd) : "";
+    const url = window.prompt("Link URL (https://…)");
+    if (!url) return;
+    const label = selected || window.prompt("Link text", url) || url;
+    insertAtCursor(`[${label}](${url.trim()})`);
+  };
+
+  const insertImages = async (files: File[]) => {
+    if (files.length === 0) return;
+    setErr(null);
+    setUploading(true);
+    try {
+      for (const f of files) {
+        const url = await uploadBlogImage(f);
+        const alt = f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+        insertAtCursor(`\n\n![${alt}](${url})\n\n`);
+      }
+    } catch (er) {
+      setErr((er as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const postsQ = useQuery({
     queryKey: ["admin-blog-posts"],
