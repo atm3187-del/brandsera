@@ -37,6 +37,7 @@ import { Route as StoreSlugSectionRouteImport } from './routes/store.$slug.$sect
 import { Route as AuthenticatedDashboardSavedRouteImport } from './routes/_authenticated/dashboard.saved'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardAlertsRouteImport } from './routes/_authenticated/dashboard.alerts'
+import { Route as ApiPublicBlogImageSplatRouteImport } from './routes/api/public/blog-image.$'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -180,6 +181,11 @@ const AuthenticatedDashboardAlertsRoute =
     path: '/alerts',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const ApiPublicBlogImageSplatRoute = ApiPublicBlogImageSplatRouteImport.update({
+  id: '/api/public/blog-image/$',
+  path: '/api/public/blog-image/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
   '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug/': typeof StoreSlugIndexRoute
+  '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -238,6 +245,7 @@ export interface FileRoutesByTo {
   '/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
   '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug': typeof StoreSlugIndexRoute
+  '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/saved': typeof AuthenticatedDashboardSavedRoute
   '/store/$slug/$section': typeof StoreSlugSectionRoute
   '/store/$slug/': typeof StoreSlugIndexRoute
+  '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | '/dashboard/saved'
     | '/store/$slug/$section'
     | '/store/$slug/'
+    | '/api/public/blog-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/dashboard/saved'
     | '/store/$slug/$section'
     | '/store/$slug'
+    | '/api/public/blog-image/$'
   id:
     | '__root__'
     | '/'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/saved'
     | '/store/$slug/$section'
     | '/store/$slug/'
+    | '/api/public/blog-image/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -385,6 +397,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   StoreSlugSectionRoute: typeof StoreSlugSectionRoute
   StoreSlugIndexRoute: typeof StoreSlugIndexRoute
+  ApiPublicBlogImageSplatRoute: typeof ApiPublicBlogImageSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -585,6 +598,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAlertsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/api/public/blog-image/$': {
+      id: '/api/public/blog-image/$'
+      path: '/api/public/blog-image/$'
+      fullPath: '/api/public/blog-image/$'
+      preLoaderRoute: typeof ApiPublicBlogImageSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   StoreSlugSectionRoute: StoreSlugSectionRoute,
   StoreSlugIndexRoute: StoreSlugIndexRoute,
+  ApiPublicBlogImageSplatRoute: ApiPublicBlogImageSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
