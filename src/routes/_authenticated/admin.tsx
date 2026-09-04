@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, ShieldCheck, ArrowLeft, BarChart3, Users, Store as StoreIcon, Ticket } from "lucide-react";
@@ -7,6 +7,18 @@ import { categories } from "@/lib/store-data";
 import { useAllBrandSections, type BrandSection } from "@/lib/section-data";
 import { useSocialLinks, socialPlatforms } from "@/lib/social-links";
 import { slugify } from "@/lib/blog-data";
+import { BlogContent } from "@/components/BlogContent";
+
+/** Upload an image to the private blog-images bucket and return its public proxy URL. */
+async function uploadBlogImage(file: File): Promise<string> {
+  if (!file.type.startsWith("image/")) throw new Error("Only image files can be uploaded.");
+  if (file.size > 5 * 1024 * 1024) throw new Error("Image must be 5MB or smaller.");
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from("blog-images").upload(path, file, { contentType: file.type, upsert: false });
+  if (error) throw new Error(error.message);
+  return `/api/public/blog-image/${path}`;
+}
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Brands Era" }, { name: "robots", content: "noindex, nofollow" }] }),
