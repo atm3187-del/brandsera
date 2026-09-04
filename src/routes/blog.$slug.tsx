@@ -87,11 +87,7 @@ function BlogPostPage() {
         <img src={post.coverUrl} alt={post.title} loading="lazy" className="mt-6 w-full rounded-md border-2 border-foreground object-cover" />
       )}
       {post.excerpt && <p className="mt-6 border-l-4 border-primary pl-4 text-lg font-medium">{post.excerpt}</p>}
-      <div className="mt-8 space-y-4 text-base leading-relaxed text-foreground/90">
-        {post.content.split(/\n{2,}/).map((para, i) => (
-          <p key={i} className="whitespace-pre-line">{para}</p>
-        ))}
-      </div>
+      <BlogContent content={post.content} />
       {post.storeSlug && (
         <div className="mt-10 rounded-md border-2 border-foreground bg-secondary p-6" style={{ boxShadow: "var(--shadow-card)" }}>
           <div className="font-display text-lg font-black uppercase">See live {post.storeName} offers</div>
