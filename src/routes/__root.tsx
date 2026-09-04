@@ -93,6 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Verified promo codes from 5,000+ top brands, updated daily." },
       { property: "og:site_name", content: "Brands Era" },
       { name: "twitter:card", content: "summary" },
+      { name: "google-site-verification", content: "1oiek0C8-FLi-FP3khQf5XemST26OcdVU8Kxot5Yc6w" },
     ],
     links: [
       {
@@ -100,6 +101,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+    ],
+    scripts: [
+      // Ad network (popunder) — loaded in <head> as required by the provider.
+      { src: "https://pl31165717.profitableratecpmnetwork.com/e3/33/36/e3333672783cd828ee713e2713bb87ab.js" },
     ],
   }),
   shellComponent: RootShell,
