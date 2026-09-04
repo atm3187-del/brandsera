@@ -497,15 +497,72 @@ function BlogsAdmin({ stores }: { stores: StoreRow[] }) {
             className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2"
           />
           <input placeholder="Short excerpt" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
-          <input type="url" placeholder="Cover image URL (optional)" value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
-          <textarea
-            required
-            rows={10}
-            placeholder="Write your blog post here. Leave a blank line between paragraphs."
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2"
-          />
+          <div className="flex gap-2 md:col-span-2">
+            <input type="url" placeholder="Cover image URL (optional) — or drop an image here" value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={async (e) => {
+                e.preventDefault();
+                const f = e.dataTransfer.files?.[0];
+                if (!f) return;
+                try { setUploading(true); setForm((s) => ({ ...s, cover_url: "" })); const url = await uploadBlogImage(f); setForm((s) => ({ ...s, cover_url: url })); }
+                catch (er) { setErr((er as Error).message); } finally { setUploading(false); }
+              }}
+              className="flex-1 rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+            <label className="cursor-pointer rounded-md border-2 border-foreground bg-secondary px-3 py-2 text-xs font-black uppercase">
+              Upload
+              <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                const f = e.target.files?.[0]; if (!f) return;
+                try { setUploading(true); const url = await uploadBlogImage(f); setForm((s) => ({ ...s, cover_url: url })); }
+                catch (er) { setErr((er as Error).message); } finally { setUploading(false); e.target.value = ""; }
+              }} />
+            </label>
+          </div>
+          {form.cover_url && <img src={form.cover_url} alt="Cover preview" className="max-h-40 rounded-md border-2 border-foreground object-cover md:col-span-2" />}
+
+          <div className="md:col-span-2 space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" onClick={insertLink} className="rounded-md border-2 border-foreground bg-secondary px-3 py-1.5 text-xs font-black uppercase">
+                + Link
+              </button>
+              <label className="cursor-pointer rounded-md border-2 border-foreground bg-secondary px-3 py-1.5 text-xs font-black uppercase">
+                + Image
+                <input type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
+                  const files = Array.from(e.target.files ?? []);
+                  await insertImages(files);
+                  e.target.value = "";
+                }} />
+              </label>
+              <button type="button" onClick={() => setPreview((p) => !p)} className="rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-xs font-black uppercase">
+                {preview ? "Edit" : "Preview"}
+              </button>
+              <span className="text-xs text-muted-foreground">
+                {uploading ? "Uploading image…" : "Drag & drop images into the editor. Links: [text](https://url)"}
+              </span>
+            </div>
+            {preview ? (
+              <div className="rounded-md border-2 border-dashed border-foreground p-4">
+                <BlogContent content={form.content || "_Nothing to preview yet._"} />
+              </div>
+            ) : (
+              <textarea
+                ref={contentRef}
+                required
+                rows={14}
+                placeholder="Write your blog post here. Leave a blank line between paragraphs. Use [text](https://example.com) for links, or the + Link button."
+                value={form.content}
+                onChange={(e) => setForm({ ...form, content: e.target.value })}
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  setDragging(false);
+                  const files = Array.from(e.dataTransfer.files ?? []).filter((f) => f.type.startsWith("image/"));
+                  await insertImages(files);
+                }}
+                className={`w-full rounded-md border-2 bg-background px-3 py-2 text-sm font-mono ${dragging ? "border-primary bg-accent" : "border-foreground"}`}
+              />
+            )}
+          </div>
         </div>
         <label className="flex items-center gap-2 text-sm font-bold">
           <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} /> Published
