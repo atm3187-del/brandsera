@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Verified promo codes from 5,000+ top brands, updated daily." },
       { property: "og:site_name", content: "Brands Era" },
       { name: "twitter:card", content: "summary" },
-      { name: "google-site-verification", content: "1oiek0C8-FLi-FP3khQf5XemST26OcdVU8Kxot5Yc6w" },
+      { name: "google-site-verification", content: "4_VTOjotLEISAvff8kQHHDtqNn2b_si2nnhQZnKUoZM" },
     ],
     links: [
       {
