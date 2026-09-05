@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { useStoresData } from "@/lib/store-data";
 
 export const Route = createFileRoute("/search")({
+  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s.q === "string" ? s.q : undefined }),
   head: () =>
     seoHead({
     path: '/search',
@@ -18,7 +19,8 @@ export const Route = createFileRoute("/search")({
 
 function SearchPage() {
   const { stores, allCoupons } = useStoresData();
-  const [query, setQuery] = useState("");
+  const { q } = Route.useSearch();
+  const [query, setQuery] = useState(q ?? "");
 
   const matchingStores = stores.filter((s) => s.name.toLowerCase().includes(query.toLowerCase()));
   const matchingCoupons = allCoupons.filter(
