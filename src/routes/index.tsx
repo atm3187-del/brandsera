@@ -266,9 +266,9 @@ function Index() {
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {posts.slice(0, 3).map((p) => (
                 <Link key={p.slug} to="/blog/$slug" params={{ slug: p.slug }} className="group overflow-hidden rounded-md border-2 border-foreground bg-card transition hover:-translate-y-1" style={{ boxShadow: "var(--shadow-card)" }}>
-                  {p.coverImage && <img src={p.coverImage} alt={p.title} loading="lazy" className="h-40 w-full object-cover" />}
+                  {p.coverUrl && <img src={p.coverUrl} alt={p.title} loading="lazy" className="h-40 w-full object-cover" />}
                   <div className="p-5">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-primary">{formatDate(p.publishedAt)}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-primary">{formatDate(p.createdAt)}</div>
                     <h3 className="mt-1 font-display text-lg font-black leading-tight group-hover:underline">{p.title}</h3>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.excerpt}</p>
                   </div>
