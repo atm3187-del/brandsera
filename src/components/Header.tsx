@@ -74,7 +74,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link to="/search" className={`hidden sm:inline-flex items-center justify-center ${iconBtn}`} aria-label="Search">
+          <Link to="/search" search={{ q: undefined }} className={`hidden sm:inline-flex items-center justify-center ${iconBtn}`} aria-label="Search">
             <Search className="h-4 w-4" />
           </Link>
           <button aria-label="Toggle theme" onClick={toggleTheme} className={iconBtn}>
