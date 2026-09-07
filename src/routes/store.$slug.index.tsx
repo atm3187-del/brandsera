@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp, LayoutGrid, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -6,7 +6,8 @@ import { useStoresData, shopUrl } from "@/lib/store-data";
 import { getBrandContent, getTopSearches } from "@/lib/brand-content";
 import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
 import { useBrandSections } from "@/lib/section-data";
-import { getStoreSeo } from "@/lib/seo.functions";
+import { getStoreSeo, getStoreSlugRedirect } from "@/lib/seo.functions";
+
 import { absUrl, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 
 
@@ -14,11 +15,16 @@ import { absUrl, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 export const Route = createFileRoute("/store/$slug/")({
   loader: async ({ params }) => {
     try {
-      return await getStoreSeo({ data: { slug: params.slug } });
+      const data = await getStoreSeo({ data: { slug: params.slug } });
+      if (data) return data;
     } catch {
       return null;
     }
+    const next = await getStoreSlugRedirect({ data: { slug: params.slug } }).catch(() => null);
+    if (next) throw redirect({ to: "/store/$slug", params: { slug: next }, statusCode: 301 });
+    return null;
   },
+
   head: ({ params, loaderData }) => {
     const path = `/store/${params.slug}`;
     const name = loaderData?.store.name ?? titleize(params.slug);
