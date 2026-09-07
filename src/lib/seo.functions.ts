@@ -13,3 +13,10 @@ export const getSectionSeo = createServerFn({ method: "GET" })
 export const getPostSeo = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ slug: z.string().min(1).max(160) }).parse(d))
   .handler(async ({ data }) => fetchPostSeo(data.slug));
+
+export const getStoreSlugRedirect = createServerFn({ method: "GET" })
+  .inputValidator((d: unknown) => z.object({ slug: z.string().min(1).max(200) }).parse(d))
+  .handler(async ({ data }) => {
+    const { fetchStoreSlugRedirect } = await import("./seo.server");
+    return fetchStoreSlugRedirect(data.slug);
+  });

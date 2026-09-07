@@ -85,3 +85,10 @@ export async function fetchSitemapData() {
 
   return { stores, sections, posts };
 }
+
+/** Resolve an outdated store slug to its current one (for 301 redirects). */
+export async function fetchStoreSlugRedirect(slug: string) {
+  const sb = publicClient();
+  const { data } = await sb.from("store_slug_redirects").select("new_slug").eq("old_slug", slug).maybeSingle();
+  return data?.new_slug ?? null;
+}

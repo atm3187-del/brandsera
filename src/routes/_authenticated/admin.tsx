@@ -249,8 +249,9 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
       >
         <h2 className="font-display text-xl font-black uppercase">Add Store</h2>
         <div className="grid gap-3 md:grid-cols-2">
-          <input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
-          <input required placeholder="slug-like-this" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input required placeholder="slug-like-this" value={form.slug} onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+
           <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm">
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
