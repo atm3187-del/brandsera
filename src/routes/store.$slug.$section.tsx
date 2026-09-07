@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -17,17 +17,22 @@ import { useStoresData, shopUrl } from "@/lib/store-data";
 import { useBrandSections } from "@/lib/section-data";
 import { getSectionContent, getSectionTopSearches } from "@/lib/brand-content";
 import { useSectionBlogPosts, formatDate } from "@/lib/blog-data";
-import { getSectionSeo } from "@/lib/seo.functions";
+import { getSectionSeo, getStoreSlugRedirect } from "@/lib/seo.functions";
 import { breadcrumbLd, collectionLd, seoHead, titleize } from "@/lib/seo";
 
 export const Route = createFileRoute("/store/$slug/$section")({
   loader: async ({ params }) => {
     try {
-      return await getSectionSeo({ data: { slug: params.slug, section: params.section } });
+      const data = await getSectionSeo({ data: { slug: params.slug, section: params.section } });
+      if (data) return data;
     } catch {
       return null;
     }
+    const next = await getStoreSlugRedirect({ data: { slug: params.slug } }).catch(() => null);
+    if (next) throw redirect({ to: "/store/$slug/$section", params: { slug: next, section: params.section }, statusCode: 301 });
+    return null;
   },
+
   head: ({ params, loaderData }) => {
     const path = `/store/${params.slug}/${params.section}`;
     const brand = loaderData?.store.name ?? titleize(params.slug);
