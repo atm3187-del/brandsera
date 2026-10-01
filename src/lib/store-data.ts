@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Coupon {
@@ -22,6 +22,7 @@ export interface Store {
   description: string;
   coupons: Coupon[];
   websiteUrl?: string;
+  logoUrl?: string | null;
   featured?: boolean;
   popular?: boolean;
   premium?: boolean;
@@ -49,7 +50,7 @@ function daysFromNow(iso: string | null): number {
 export async function fetchStores(): Promise<Store[]> {
   const { data: storeRows, error } = await supabase
     .from("stores")
-    .select("id,name,slug,category,description,website_url,featured,popular,premium")
+    .select("id,name,slug,category,description,website_url,logo_url,featured,popular,premium")
     .order("name");
   if (error) throw error;
   const { data: couponRows, error: cErr } = await supabase
@@ -80,6 +81,7 @@ export async function fetchStores(): Promise<Store[]> {
     category: s.category,
     description: s.description,
     websiteUrl: s.website_url ?? undefined,
+    logoUrl: s.logo_url ?? null,
     featured: s.featured,
     popular: s.popular,
     premium: s.premium,
@@ -87,8 +89,11 @@ export async function fetchStores(): Promise<Store[]> {
   }));
 }
 
+/** Shared query for every store + coupon. Prefetched in route loaders so pages render on the server. */
+export const storesQueryOptions = queryOptions({ queryKey: ["stores-all"], queryFn: fetchStores, staleTime: 60_000 });
+
 export function useStoresData() {
-  const q = useQuery({ queryKey: ["stores-all"], queryFn: fetchStores, staleTime: 60_000 });
+  const q = useQuery(storesQueryOptions);
   const stores = q.data ?? [];
   const allCoupons = stores.flatMap((s) => s.coupons.map((c) => ({ ...c, store: s })));
   return { stores, allCoupons, loading: q.isLoading, error: q.error };
