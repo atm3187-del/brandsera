@@ -3,9 +3,12 @@ import { seoHead } from "@/lib/seo";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData } from "@/lib/store-data";
+import { useStoresData, storesQueryOptions } from "@/lib/store-data";
+
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
 
 export const Route = createFileRoute("/search")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   validateSearch: (s: Record<string, unknown>) => ({ q: typeof s.q === "string" ? s.q : undefined }),
   head: () =>
     seoHead({
@@ -64,7 +67,7 @@ function SearchPage() {
                   className="flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-4 hover:bg-accent"
                   style={{ boxShadow: "var(--shadow-card)" }}
                 >
-                  <BrandLogo name={s.name} />
+                  <BrandLogo name={s.name} src={s.logoUrl} />
                   <div className="font-display font-black uppercase">{s.name}</div>
                 </Link>
               ))}
@@ -85,7 +88,7 @@ function SearchPage() {
                   style={{ boxShadow: "var(--shadow-card)" }}
                 >
                   <div className="flex items-center gap-3">
-                    <BrandLogo name={c.store.name} size="sm" />
+                    <BrandLogo name={c.store.name} src={c.store.logoUrl} size="sm" />
                     <div className="font-display font-black uppercase">{c.store.name}</div>
                   </div>
                   <p className="mt-3 font-black">{c.title}</p>

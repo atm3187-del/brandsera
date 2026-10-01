@@ -1,11 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Tag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { categories, useStoresData } from "@/lib/store-data";
+import { categories, useStoresData, storesQueryOptions } from "@/lib/store-data";
 import { breadcrumbLd, categorySlug, collectionLd, seoHead } from "@/lib/seo";
 
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
+
 export const Route = createFileRoute("/category/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params, context }) => {
+    await prefetchStores(context.queryClient);
     const name = categories.find((c) => categorySlug(c) === params.slug);
     if (!name) throw notFound();
     return { name };
@@ -78,7 +81,7 @@ function CategoryPage() {
             className="flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-5 transition hover:-translate-y-0.5 hover:bg-secondary"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
-            <BrandLogo name={s.name} />
+            <BrandLogo name={s.name} src={s.logoUrl} />
             <div className="min-w-0 flex-1">
               <div className="font-display text-xl font-black uppercase leading-tight">{s.name}</div>
               <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{s.description}</p>

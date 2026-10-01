@@ -5,10 +5,13 @@ import { seoHead, SITE_NAME, SITE_URL, categorySlug } from "@/lib/seo";
 import { Search, CheckCircle2, Flame, Zap, ShieldCheck, Copy, ChevronLeft, ChevronRight, ArrowRight, Tag, Sparkles } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CouponCard } from "@/components/CouponCard";
-import { useStoresData, categories, type Coupon, type Store } from "@/lib/store-data";
+import { useStoresData, categories, type Coupon, type Store, storesQueryOptions } from "@/lib/store-data";
 import { useBlogPosts, formatDate } from "@/lib/blog-data";
 
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
+
 export const Route = createFileRoute("/")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   head: () =>
     seoHead({
       path: "/",
@@ -130,7 +133,7 @@ function Index() {
             <div className="flex w-max animate-marquee gap-10 px-5">
               {[...marqueeBrands, ...marqueeBrands].map((b, i) => (
                 <Link key={`${b.slug}-${i}`} to="/store/$slug" params={{ slug: b.slug }} className="flex items-center gap-2 font-display text-sm font-black uppercase tracking-wide hover:text-primary">
-                  <BrandLogo name={b.name} size="sm" /> {b.name}
+                  <BrandLogo name={b.name} src={b.logoUrl} size="sm" /> {b.name}
                 </Link>
               ))}
             </div>
@@ -196,7 +199,7 @@ function Index() {
               style={{ boxShadow: "var(--shadow-card)", animationDelay: `${i * 40}ms` }}
             >
               <div className="transition group-hover:animate-wiggle">
-                <BrandLogo name={b.name} />
+                <BrandLogo name={b.name} src={b.logoUrl} />
               </div>
               <div className="font-display text-sm font-black uppercase">{b.name}</div>
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary">{b.coupons.length} offers</div>
@@ -214,7 +217,7 @@ function Index() {
               {premiumBrands.slice(0, 4).map((b) => (
                 <Link key={b.slug} to="/store/$slug" params={{ slug: b.slug }} className="group rounded-md border-2 border-foreground bg-card p-6 transition hover:-translate-y-1" style={{ boxShadow: "var(--shadow-card)" }}>
                   <div className="flex items-center justify-between">
-                    <BrandLogo name={b.name} size="lg" />
+                    <BrandLogo name={b.name} src={b.logoUrl} size="lg" />
                     <span className="rounded-full bg-primary px-2.5 py-1 text-[10px] font-black uppercase text-primary-foreground">Featured</span>
                   </div>
                   <h3 className="mt-4 font-display text-xl font-black uppercase">{b.name}</h3>
@@ -320,7 +323,7 @@ function DealSlider({ deals }: { deals: DealItem[] }) {
             <div key={d.id} className="min-w-0 flex-[0_0_85%] sm:flex-[0_0_48%] lg:flex-[0_0_32%]">
               <div className="flex h-full flex-col rounded-md border-2 border-foreground bg-card p-5 transition hover:-translate-y-1" style={{ boxShadow: "var(--shadow-card)" }}>
                 <div className="flex items-start justify-between">
-                  <BrandLogo name={d.store.name} />
+                  <BrandLogo name={d.store.name} src={d.store.logoUrl} />
                   <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] font-black uppercase tracking-wide">{d.type}</span>
                 </div>
                 <Link to="/store/$slug" params={{ slug: d.store.slug }} className="mt-4 text-xs font-bold uppercase tracking-widest text-primary hover:underline">

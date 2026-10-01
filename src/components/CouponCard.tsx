@@ -16,7 +16,7 @@ export function CouponCard({ coupon, store }: { coupon: Coupon; store: Store }) 
     >
       {/* Brand block */}
       <div className="flex items-center gap-4 md:w-56 md:shrink-0 md:flex-col md:items-start md:gap-3 md:border-r-2 md:border-dashed md:border-foreground/25 md:pr-6">
-        <BrandLogo name={store.name} />
+        <BrandLogo name={store.name} src={store.logoUrl} />
         <div className="min-w-0">
           <Link
             to="/store/$slug"

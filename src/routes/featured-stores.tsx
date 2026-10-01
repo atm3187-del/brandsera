@@ -2,9 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { Sparkles } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData } from "@/lib/store-data";
+import { useStoresData, storesQueryOptions } from "@/lib/store-data";
+
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
 
 export const Route = createFileRoute("/featured-stores")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   head: () =>
     seoHead({
     path: '/featured-stores',
@@ -40,7 +43,7 @@ function FeaturedStoresPage() {
             style={{ boxShadow: "var(--shadow-card)" }}
           >
             <div className="flex items-center gap-4">
-              <BrandLogo name={s.name} size="lg" />
+              <BrandLogo name={s.name} src={s.logoUrl} size="lg" />
               <div>
                 <div className="font-display text-xl font-black uppercase">{s.name}</div>
                 <div className="text-sm text-muted-foreground">{s.category}</div>

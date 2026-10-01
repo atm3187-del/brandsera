@@ -2,9 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { TrendingUp } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData } from "@/lib/store-data";
+import { useStoresData, storesQueryOptions } from "@/lib/store-data";
+
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
 
 export const Route = createFileRoute("/popular-stores")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   head: () =>
     seoHead({
     path: '/popular-stores',
@@ -41,7 +44,7 @@ function PopularStoresPage() {
                 className="flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-4 transition hover:-translate-x-0.5 hover:-translate-y-0.5"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
-                <BrandLogo name={c.store.name} />
+                <BrandLogo name={c.store.name} src={c.store.logoUrl} />
                 <div className="flex-1 min-w-0">
                   <div className="font-display font-black truncate">{c.title}</div>
                   <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -71,7 +74,7 @@ function PopularStoresPage() {
                 className="flex flex-col items-center gap-2 rounded-md border-2 border-foreground bg-card p-5 text-center hover:bg-accent"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
-                <BrandLogo name={s.name} />
+                <BrandLogo name={s.name} src={s.logoUrl} />
                 <div className="text-sm font-display font-black uppercase">{s.name}</div>
               </Link>
             ))}
