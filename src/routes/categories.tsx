@@ -2,9 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { seoHead, collectionLd, breadcrumbLd, categorySlug } from "@/lib/seo";
 import { Tag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { categories, useStoresData } from "@/lib/store-data";
+import { categories, useStoresData, storesQueryOptions } from "@/lib/store-data";
+
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
 
 export const Route = createFileRoute("/categories")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   head: () =>
     seoHead({
     path: '/categories',
@@ -53,7 +56,7 @@ function CategoriesPage() {
                       params={{ slug: s.slug }}
                       className="flex items-center gap-3 rounded-md border-2 border-foreground bg-background p-2 hover:bg-accent"
                     >
-                      <BrandLogo name={s.name} size="sm" />
+                      <BrandLogo name={s.name} src={s.logoUrl} size="sm" />
                       <span className="text-sm font-bold">{s.name}</span>
                     </Link>
                   ))}

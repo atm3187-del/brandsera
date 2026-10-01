@@ -2,10 +2,10 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { CheckCircle2, Copy, ArrowLeft, ExternalLink, BookOpen, HelpCircle, Info, Sparkles, TrendingUp, LayoutGrid, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData, shopUrl } from "@/lib/store-data";
+import { useStoresData, shopUrl, storesQueryOptions } from "@/lib/store-data";
 import { getBrandContent, getTopSearches } from "@/lib/brand-content";
-import { useStoreBlogPosts, formatDate } from "@/lib/blog-data";
-import { useBrandSections } from "@/lib/section-data";
+import { useStoreBlogPosts, formatDate, storeBlogPostsQueryOptions } from "@/lib/blog-data";
+import { useBrandSections, brandSectionsQueryOptions } from "@/lib/section-data";
 import { getStoreSeo, getStoreSlugRedirect } from "@/lib/seo.functions";
 
 import { absUrl, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
@@ -13,9 +13,24 @@ import { absUrl, breadcrumbLd, seoHead, titleize } from "@/lib/seo";
 
 
 export const Route = createFileRoute("/store/$slug/")({
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
+    // Prefetch everything the page renders so the full content is in the server HTML.
+    const prefetch = (async () => {
+      try {
+        const all = await context.queryClient.ensureQueryData(storesQueryOptions);
+        const store = all.find((s) => s.slug === params.slug);
+        if (store) {
+          await Promise.all([
+            context.queryClient.ensureQueryData(brandSectionsQueryOptions(store.id)),
+            context.queryClient.ensureQueryData(storeBlogPostsQueryOptions(store.id)),
+          ]);
+        }
+      } catch (err) {
+        console.error("[store] prefetch failed", err);
+      }
+    })();
     try {
-      const data = await getStoreSeo({ data: { slug: params.slug } });
+      const [data] = await Promise.all([getStoreSeo({ data: { slug: params.slug } }), prefetch]);
       if (data) return data;
     } catch {
       return null;
@@ -110,12 +125,12 @@ function StorePage() {
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
       <div className="rounded-md border-2 border-foreground bg-card p-8 md:p-12" style={{ boxShadow: "var(--shadow-card)" }}>
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-center">
-          <BrandLogo name={store.name} size="lg" />
+          <BrandLogo name={store.name} src={store.logoUrl} size="lg" />
           <div className="flex-1">
             <div className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
               <CheckCircle2 className="h-3 w-3" /> Verified
             </div>
-            <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{store.name}</h1>
+            <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{store.name} Coupons &amp; Promo Codes {new Date().getFullYear()}</h1>
             <p className="mt-2 text-muted-foreground font-medium">{store.description}</p>
             <a
               href={brandUrl}
@@ -150,6 +165,7 @@ function StorePage() {
                   className="flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-5 transition hover:-translate-y-0.5 hover:bg-secondary"
                   style={{ boxShadow: "var(--shadow-card)" }}
                 >
+                  <BrandLogo name={sec.name} src={sec.imageUrl ?? store.logoUrl} />
                   <div className="min-w-0 flex-1">
                     <div className="font-display text-xl font-black uppercase leading-tight">{sec.name}</div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
@@ -181,7 +197,7 @@ function StorePage() {
             style={{ boxShadow: "var(--shadow-card)" }}
           >
             <div className="flex items-center gap-4 md:w-52 md:shrink-0 md:flex-col md:items-start md:gap-3 md:border-r-2 md:border-dashed md:border-foreground/25 md:pr-6">
-              <BrandLogo name={store.name} />
+              <BrandLogo name={store.name} src={store.logoUrl} />
               <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-secondary px-2 py-0.5 text-[10px] font-black uppercase tracking-wide">
                 <CheckCircle2 className="h-3 w-3 text-primary" /> {c.type}
               </span>
@@ -384,7 +400,7 @@ function StorePage() {
                 className="flex items-center gap-3 rounded-md border-2 border-foreground bg-card p-4 hover:bg-accent"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
-                <BrandLogo name={s.name} size="sm" />
+                <BrandLogo name={s.name} src={s.logoUrl} size="sm" />
                 <span className="font-display font-black uppercase text-sm">{s.name}</span>
               </Link>
             ))}

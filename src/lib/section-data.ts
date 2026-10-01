@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface BrandSection {
@@ -42,9 +42,8 @@ function map(r: Row): BrandSection {
 }
 
 /** All sections belonging to one brand. */
-export function useBrandSections(storeId: string | undefined) {
-  return useQuery({
-    enabled: !!storeId,
+export function brandSectionsQueryOptions(storeId: string | undefined) {
+  return queryOptions({
     queryKey: ["brand-sections", storeId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -58,6 +57,10 @@ export function useBrandSections(storeId: string | undefined) {
     },
     staleTime: 60_000,
   });
+}
+
+export function useBrandSections(storeId: string | undefined) {
+  return useQuery({ ...brandSectionsQueryOptions(storeId), enabled: !!storeId });
 }
 
 /** Every section across all brands (admin panel). */

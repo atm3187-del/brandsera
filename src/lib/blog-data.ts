@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface BlogPost {
@@ -77,9 +77,8 @@ export function useBlogPost(slug: string) {
 }
 
 /** Posts written for one brand. */
-export function useStoreBlogPosts(storeId: string | undefined) {
-  return useQuery({
-    enabled: !!storeId,
+export function storeBlogPostsQueryOptions(storeId: string | undefined) {
+  return queryOptions({
     queryKey: ["blog-posts-store", storeId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -94,6 +93,10 @@ export function useStoreBlogPosts(storeId: string | undefined) {
   });
 }
 
+export function useStoreBlogPosts(storeId: string | undefined) {
+  return useQuery({ ...storeBlogPostsQueryOptions(storeId), enabled: !!storeId });
+}
+
 export function slugify(s: string) {
   return s
     .toLowerCase()
@@ -103,13 +106,12 @@ export function slugify(s: string) {
 }
 
 export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
 /** Posts written for one section of a brand. */
-export function useSectionBlogPosts(sectionId: string | undefined) {
-  return useQuery({
-    enabled: !!sectionId,
+export function sectionBlogPostsQueryOptions(sectionId: string | undefined) {
+  return queryOptions({
     queryKey: ["blog-posts-section", sectionId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -122,4 +124,8 @@ export function useSectionBlogPosts(sectionId: string | undefined) {
       return ((data ?? []) as unknown as Row[]).map(map);
     },
   });
+}
+
+export function useSectionBlogPosts(sectionId: string | undefined) {
+  return useQuery({ ...sectionBlogPostsQueryOptions(sectionId), enabled: !!sectionId });
 }

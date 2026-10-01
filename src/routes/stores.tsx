@@ -3,9 +3,12 @@ import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { Search, Store } from "lucide-react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData } from "@/lib/store-data";
+import { useStoresData, storesQueryOptions } from "@/lib/store-data";
+
+const prefetchStores = (qc: import("@tanstack/react-query").QueryClient) => qc.ensureQueryData(storesQueryOptions).catch((err) => { console.error("[prefetch] stores failed", err); });
 
 export const Route = createFileRoute("/stores")({
+  loader: async ({ context }) => { await prefetchStores(context.queryClient); },
   head: () =>
     seoHead({
     path: '/stores',
@@ -83,7 +86,7 @@ function AllStoresPage() {
             className="group flex items-center gap-4 rounded-md border-2 border-foreground bg-card p-4 transition hover:-translate-x-0.5 hover:-translate-y-0.5"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
-            <BrandLogo name={s.name} />
+            <BrandLogo name={s.name} src={s.logoUrl} />
             <div>
               <div className="font-display font-black uppercase">{s.name}</div>
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary">{s.coupons.length} Offers</div>

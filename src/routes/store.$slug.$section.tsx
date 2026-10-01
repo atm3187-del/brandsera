@@ -13,17 +13,29 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { useStoresData, shopUrl } from "@/lib/store-data";
-import { useBrandSections } from "@/lib/section-data";
+import { useStoresData, shopUrl, storesQueryOptions } from "@/lib/store-data";
+import { useBrandSections, brandSectionsQueryOptions } from "@/lib/section-data";
 import { getSectionContent, getSectionTopSearches } from "@/lib/brand-content";
-import { useSectionBlogPosts, formatDate } from "@/lib/blog-data";
+import { useSectionBlogPosts, formatDate, sectionBlogPostsQueryOptions } from "@/lib/blog-data";
 import { getSectionSeo, getStoreSlugRedirect } from "@/lib/seo.functions";
 import { breadcrumbLd, collectionLd, seoHead, titleize } from "@/lib/seo";
 
 export const Route = createFileRoute("/store/$slug/$section")({
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
+    const prefetch = (async () => {
+      try {
+        const all = await context.queryClient.ensureQueryData(storesQueryOptions);
+        const store = all.find((s) => s.slug === params.slug);
+        if (!store) return;
+        const secs = await context.queryClient.ensureQueryData(brandSectionsQueryOptions(store.id));
+        const sec = secs.find((x) => x.slug === params.section);
+        if (sec) await context.queryClient.ensureQueryData(sectionBlogPostsQueryOptions(sec.id));
+      } catch (err) {
+        console.error("[section] prefetch failed", err);
+      }
+    })();
     try {
-      const data = await getSectionSeo({ data: { slug: params.slug, section: params.section } });
+      const [data] = await Promise.all([getSectionSeo({ data: { slug: params.slug, section: params.section } }), prefetch]);
       if (data) return data;
     } catch {
       return null;
@@ -121,7 +133,7 @@ function SectionPage() {
               loading="lazy"
             />
           ) : (
-            <BrandLogo name={store.name} size="lg" />
+            <BrandLogo name={store.name} src={store.logoUrl} size="lg" />
           )}
           <div className="flex-1">
             <div className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-secondary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide">
@@ -168,7 +180,7 @@ function SectionPage() {
               style={{ boxShadow: "var(--shadow-card)" }}
             >
               <div className="flex items-center gap-4 md:w-52 md:shrink-0 md:flex-col md:items-start md:gap-3 md:border-r-2 md:border-dashed md:border-foreground/25 md:pr-6">
-                <BrandLogo name={store.name} />
+                <BrandLogo name={store.name} src={section.imageUrl ?? store.logoUrl} />
                 <span className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-secondary px-2 py-0.5 text-[10px] font-black uppercase tracking-wide">
                   <CheckCircle2 className="h-3 w-3 text-primary" /> {c.type}
                 </span>
