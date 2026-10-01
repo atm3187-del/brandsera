@@ -13,9 +13,9 @@ export const getRouter = () => {
     defaultErrorComponent: ErrorComponent,
     // Data fetched by loaders on the server is sent with the HTML so pages render fully
     // for search engines and the browser doesn't show a "Loading…" state on first paint.
-    dehydrate: () => ({ queryClientState: dehydrate(queryClient) }),
-    hydrate: (dehydrated: { queryClientState: DehydratedState }) => {
-      hydrate(queryClient, dehydrated.queryClientState);
+    dehydrate: () => ({ queryClientState: JSON.stringify(dehydrate(queryClient)) }),
+    hydrate: (dehydrated: { queryClientState: string }) => {
+      hydrate(queryClient, JSON.parse(dehydrated.queryClientState) as DehydratedState);
     },
   });
 
