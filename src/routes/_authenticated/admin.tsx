@@ -8,6 +8,8 @@ import { useAllBrandSections, type BrandSection } from "@/lib/section-data";
 import { useSocialLinks, socialPlatforms } from "@/lib/social-links";
 import { slugify } from "@/lib/blog-data";
 import { BlogContent } from "@/components/BlogContent";
+import { ImageDropField } from "@/components/ImageDropField";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /** Upload an image to the private blog-images bucket and return its public proxy URL. */
 async function uploadBlogImage(file: File): Promise<string> {
@@ -39,6 +41,8 @@ type StoreRow = {
   slug: string;
   category: string;
   description: string;
+  website_url: string | null;
+  logo_url: string | null;
   featured: boolean;
   popular: boolean;
   premium: boolean;
@@ -131,7 +135,7 @@ function AdminPage() {
 }
 
 function StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loading: boolean; onChange: () => void }) {
-  return _StoresAdmin({ stores, loading, onChange });
+  return <_StoresAdmin stores={stores} loading={loading} onChange={onChange} />;
 }
 
 function AnalyticsAdmin() {
@@ -212,18 +216,22 @@ function AnalyticsAdmin() {
 }
 
 function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loading: boolean; onChange: () => void }) {
-  const [form, setForm] = useState({ name: "", slug: "", category: categories[0], description: "", website_url: "", featured: false, popular: false, premium: false });
+  const [form, setForm] = useState({ id: "", name: "", slug: "", category: categories[0], description: "", website_url: "", logo_url: "", featured: false, popular: false, premium: false });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const create = useMutation({
     mutationFn: async () => {
       setErr(null);
-      const { error } = await supabase.from("stores").insert({ ...form });
+      const { id, ...rest } = form;
+      const payload = { ...rest, website_url: rest.website_url || null, logo_url: rest.logo_url || null };
+      const { error } = id
+        ? await supabase.from("stores").update(payload).eq("id", id)
+        : await supabase.from("stores").insert(payload);
       if (error) throw error;
     },
     onSuccess: () => {
-      setForm({ name: "", slug: "", category: categories[0], description: "", website_url: "", featured: false, popular: false, premium: false });
+      setForm({ id: "", name: "", slug: "", category: categories[0], description: "", website_url: "", logo_url: "", featured: false, popular: false, premium: false });
       onChange();
     },
     onError: (e: any) => setErr(e.message),
@@ -247,9 +255,16 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
         className="rounded-md border-2 border-foreground bg-card p-6 space-y-4"
         style={{ boxShadow: "var(--shadow-card)" }}
       >
-        <h2 className="font-display text-xl font-black uppercase">Add Store</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-xl font-black uppercase">{form.id ? `Edit Store — ${form.name}` : "Add Store"}</h2>
+          {form.id && (
+            <button type="button" onClick={() => setForm({ id: "", name: "", slug: "", category: categories[0], description: "", website_url: "", logo_url: "", featured: false, popular: false, premium: false })} className="rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-xs font-black uppercase">
+              Cancel edit
+            </button>
+          )}
+        </div>
         <div className="grid gap-3 md:grid-cols-2">
-          <input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: form.id ? form.slug : slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
           <input required placeholder="slug-like-this" value={form.slug} onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
 
           <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm">
@@ -257,6 +272,7 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
           </select>
           <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
           <input type="url" placeholder="https://brand-official-site.com" value={form.website_url} onChange={(e) => setForm({ ...form, website_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
+          <ImageDropField label="Store logo" value={form.logo_url} onChange={(url) => setForm((f) => ({ ...f, logo_url: url }))} className="md:col-span-2" />
         </div>
         <div className="flex flex-wrap gap-4 text-sm font-bold">
           <label className="flex items-center gap-2"><input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} /> Featured</label>
@@ -265,7 +281,7 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
         </div>
         {err && <div className="text-sm font-bold text-destructive">{err}</div>}
         <button disabled={saving} className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-5 py-2 text-sm font-black uppercase text-primary-foreground disabled:opacity-50">
-          <Plus className="h-4 w-4" /> {saving ? "Adding…" : "Add Store"}
+          <Plus className="h-4 w-4" /> {saving ? "Saving…" : form.id ? "Save Changes" : "Add Store"}
         </button>
       </form>
 
@@ -279,6 +295,7 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
           <div className="divide-y-2 divide-foreground/20">
             {stores.map((s) => (
               <div key={s.id} className="flex items-center gap-4 p-4">
+                <BrandLogo name={s.name} src={s.logo_url} size="sm" />
                 <div className="flex-1 min-w-0">
                   <div className="font-display font-black uppercase">{s.name}</div>
                   <div className="text-xs font-bold uppercase text-muted-foreground truncate">
@@ -288,6 +305,15 @@ function _StoresAdmin({ stores, loading, onChange }: { stores: StoreRow[]; loadi
                     {s.premium && " · Premium"}
                   </div>
                 </div>
+                <button
+                  onClick={() => {
+                    setForm({ id: s.id, name: s.name, slug: s.slug, category: s.category, description: s.description, website_url: s.website_url ?? "", logo_url: s.logo_url ?? "", featured: s.featured, popular: s.popular, premium: s.premium });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="rounded-md border-2 border-foreground bg-secondary px-3 py-1.5 text-xs font-black uppercase"
+                >
+                  Edit
+                </button>
                 <button onClick={() => del(s.id)} className="rounded-md border-2 border-foreground bg-destructive px-3 py-1.5 text-xs font-black uppercase text-destructive-foreground">
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -751,7 +777,7 @@ function SectionsAdmin({ stores }: { stores: StoreRow[] }) {
           <input required placeholder="Section name (e.g. Shoes)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: form.id ? form.slug : slugify(e.target.value) })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
           <input placeholder="url-slug (auto)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
           <input placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
-          <input type="url" placeholder="Section image URL (optional)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
+          <ImageDropField label="Section image" value={form.image_url} onChange={(url) => setForm((f) => ({ ...f, image_url: url }))} className="md:col-span-2" />
           <input type="url" placeholder="Shop URL for this section (optional)" value={form.landing_url} onChange={(e) => setForm({ ...form, landing_url: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm" />
           <textarea rows={6} placeholder="About this section (shown on the section page)" value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} className="rounded-md border-2 border-foreground bg-background px-3 py-2 text-sm md:col-span-2" />
         </div>
