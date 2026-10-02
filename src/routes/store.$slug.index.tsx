@@ -130,7 +130,7 @@ function StorePage() {
             <div className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
               <CheckCircle2 className="h-3 w-3" /> Verified
             </div>
-            <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{store.name} Coupons &amp; Promo Codes {new Date().getFullYear()}</h1>
+            <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{`${store.name} Coupons & Promo Codes ${new Date().getFullYear()}`}</h1>
             <p className="mt-2 text-muted-foreground font-medium">{store.description}</p>
             <a
               href={brandUrl}
