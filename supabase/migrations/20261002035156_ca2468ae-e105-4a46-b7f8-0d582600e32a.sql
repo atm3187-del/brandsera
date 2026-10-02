@@ -1,0 +1,1 @@
+UPDATE public.stores SET name = 'TourRadar' WHERE slug = 'tourradar' AND name = 'Tourradar';
