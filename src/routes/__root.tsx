@@ -106,6 +106,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       // Ad network (popunder) — loaded in <head> as required by the provider.
       { src: "https://pl31165717.profitableratecpmnetwork.com/e3/33/36/e3333672783cd828ee713e2713bb87ab.js" },
+      // Google Analytics (GA4)
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-X33K0C8S2L",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-X33K0C8S2L');`,
+      },
     ],
   }),
   shellComponent: RootShell,
