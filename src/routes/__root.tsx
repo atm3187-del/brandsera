@@ -152,6 +152,16 @@ function RootComponent() {
     return () => sub.subscription.unsubscribe();
   }, [router, queryClient]);
 
+  // Track SPA route changes as page views in Google Analytics.
+  useEffect(() => {
+    const dataLayer = (window.dataLayer = window.dataLayer || []);
+    dataLayer.push([
+      "event",
+      "page_view",
+      { page_path: router.state.location.pathname },
+    ]);
+  }, [router.state.location.pathname]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
