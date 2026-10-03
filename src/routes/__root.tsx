@@ -154,7 +154,8 @@ function RootComponent() {
 
   // Track SPA route changes as page views in Google Analytics.
   useEffect(() => {
-    const dataLayer = (window.dataLayer = window.dataLayer || []);
+    const w = window as Window & { dataLayer?: unknown[] };
+    const dataLayer = (w.dataLayer = w.dataLayer || []);
     dataLayer.push([
       "event",
       "page_view",
