@@ -106,6 +106,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       // Ad network (popunder) — loaded in <head> as required by the provider.
       { src: "https://pl31165717.profitableratecpmnetwork.com/e3/33/36/e3333672783cd828ee713e2713bb87ab.js" },
+      // Google Analytics (GA4)
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-X33K0C8S2L",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-X33K0C8S2L');`,
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -140,6 +151,17 @@ function RootComponent() {
     });
     return () => sub.subscription.unsubscribe();
   }, [router, queryClient]);
+
+  // Track SPA route changes as page views in Google Analytics.
+  useEffect(() => {
+    const w = window as Window & { dataLayer?: unknown[] };
+    const dataLayer = (w.dataLayer = w.dataLayer || []);
+    dataLayer.push([
+      "event",
+      "page_view",
+      { page_path: router.state.location.pathname },
+    ]);
+  }, [router.state.location.pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
