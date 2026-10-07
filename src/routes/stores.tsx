@@ -13,8 +13,8 @@ export const Route = createFileRoute("/stores")({
     seoHead({
     path: '/stores',
     title: 'All Stores — Coupons & Promo Codes by Brand — Brands Era',
-    description: 'Browse every brand on Brands Era and jump straight to its verified coupons, promo codes and deals.',
-    jsonLd: [collectionLd('All Stores — Coupons & Promo Codes by Brand — Brands Era', 'Browse every brand on Brands Era and jump straight to its verified coupons, promo codes and deals.', '/stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'All Stores', path: '/stores' }])]
+    description: 'Browse every brand on Brands Era and jump straight to its coupons, promo codes and deals.',
+    jsonLd: [collectionLd('All Stores — Coupons & Promo Codes by Brand — Brands Era', 'Browse every brand on Brands Era and jump straight to its coupons, promo codes and deals.', '/stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'All Stores', path: '/stores' }])]
   }),
   component: AllStoresPage,
 });
@@ -37,7 +37,7 @@ function AllStoresPage() {
       <div className="text-center">
         <h1 className="font-display text-4xl font-black md:text-6xl uppercase">Browse All Stores</h1>
         <p className="mx-auto mt-4 max-w-2xl text-muted-foreground font-medium">
-          Discover thousands of verified brands and unlock exclusive deals with working coupon codes.
+          Browse every brand we list and see its current coupon codes and deals.
         </p>
       </div>
 

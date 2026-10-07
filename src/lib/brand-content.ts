@@ -33,14 +33,14 @@ export function getBrandContent(store: Store): BrandContent {
   return {
     about: [
       `${n} is a ${cat} brand featured on Brands Era. ${store.description}`,
-      `Our editors track ${n} promotions year-round, testing every code before it goes live so you only see offers that actually work at checkout. Right now there ${store.coupons.length === 1 ? "is" : "are"} ${store.coupons.length} active offer${store.coupons.length === 1 ? "" : "s"} on this page — ${codes} promo code${codes === 1 ? "" : "s"} and ${deals} sitewide deal${deals === 1 ? "" : "s"}.`,
-      `Shoppers have used ${n} offers from Brands Era ${totalUses.toLocaleString()} times. Save this page or add a coupon to your favourites and we'll alert you the moment a new ${n} discount lands.`,
+      `We collect ${n} promotions as they are released. Codes can expire or change without notice, so always confirm the final price on the ${n} website before paying. Right now there ${store.coupons.length === 1 ? "is" : "are"} ${store.coupons.length} active offer${store.coupons.length === 1 ? "" : "s"} on this page — ${codes} promo code${codes === 1 ? "" : "s"} and ${deals} sitewide deal${deals === 1 ? "" : "s"}.`,
+      `Save this page or add ${n} to your favourites and we'll alert you when a new ${n} offer is added.`,
     ],
     highlights: [
-      `${store.coupons.length} verified ${n} offer${store.coupons.length === 1 ? "" : "s"} live today`,
-      best ? `Most-used offer: ${best.title}` : `New offers added regularly`,
+      `${store.coupons.length} ${n} offer${store.coupons.length === 1 ? "" : "s"} live today`,
+      best ? `Featured offer: ${best.title}` : `New offers added regularly`,
       `Category: ${store.category}`,
-      `Checked by the Brands Era editorial team`,
+      `Brands Era is not affiliated with ${n}`,
     ],
     howTo: [
       `Browse the active ${n} offers listed above and pick the one that fits your basket.`,
@@ -71,7 +71,7 @@ export function getBrandContent(store: Store): BrandContent {
     articles: [
       {
         title: `How to save the most at ${n} in ${new Date().getFullYear()}`,
-        excerpt: `From seasonal sales to newsletter perks, here are the tactics our editors use to cut the price of a ${n} order.`,
+        excerpt: `From seasonal sales to newsletter perks, here are practical ways to cut the price of a ${n} order.`,
         readMinutes: 3 + (seed % 3),
       },
       {
@@ -160,13 +160,13 @@ export function getSectionContent(store: Store, section: SectionLike, offerCount
   const written = section.about.trim();
   return {
     about: [
-      written || `${s} at ${n} — ${section.description || `everything you need to know about ${n} ${s.toLowerCase()}, plus the discounts our editors have verified for this range.`}`,
+      written || `${s} at ${n} — ${section.description || `everything you need to know about ${n} ${s.toLowerCase()}, plus the current discounts we list for this range.`}`,
       `This page collects the ${n} ${s.toLowerCase()} offers we currently track. There ${offerCount === 1 ? "is" : "are"} ${offerCount} offer${offerCount === 1 ? "" : "s"} tagged to ${s} right now, alongside guides and the searches shoppers run most for this range.`,
     ].filter(Boolean),
     highlights: [
       `${offerCount} ${s} offer${offerCount === 1 ? "" : "s"} tracked`,
       `Part of the ${n} brand hub`,
-      `Checked by the Brands Era editorial team`,
+      `Brands Era is not affiliated with ${n}`,
       `Updated whenever a new ${s.toLowerCase()} deal lands`,
     ],
     howTo: [

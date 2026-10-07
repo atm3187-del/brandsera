@@ -15,8 +15,8 @@ export const Route = createFileRoute("/")({
   head: () =>
     seoHead({
       path: "/",
-      title: "Brands Era — Verified Coupons, Promo Codes & Deals",
-      description: "Find verified promo codes and exclusive discounts from top brands, tested daily by Brands Era editors. Save loudly.",
+      title: "Brands Era — Coupons, Promo Codes & Deals",
+      description: "Find promo codes and deals from popular brands in one place. Brands Era lists current offers and links you straight to the retailer.",
       jsonLd: [
         {
           "@context": "https://schema.org",
@@ -33,12 +33,6 @@ export const Route = createFileRoute("/")({
 
 const rotatingWords = ["fashion", "tech", "travel", "beauty", "everything"];
 
-const stats = [
-  { value: "5K+", label: "Verified Brands" },
-  { value: "98%", label: "Success Rate" },
-  { value: "$2M+", label: "Saved by Users" },
-  { value: "100K+", label: "Happy Shoppers" },
-];
 
 type DealItem = Coupon & { store: Store };
 
@@ -57,6 +51,7 @@ function Index() {
 
   const topDeals = useMemo<DealItem[]>(() => [...allCoupons].sort((a, b) => b.uses - a.uses).slice(0, 10), [allCoupons]);
   const popularBrands = stores.filter((s) => s.popular);
+  const categoryCount = new Set(stores.map((s) => s.category)).size;
   const premiumBrands = stores.filter((s) => s.premium);
   const marqueeBrands = stores.slice(0, 16);
 
@@ -78,7 +73,7 @@ function Index() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
         <div className="relative mx-auto max-w-5xl px-4 pt-16 pb-14 text-center md:pt-24 md:pb-20">
           <div className="animate-rise inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-xs font-black uppercase tracking-widest text-accent-foreground">
-            <Sparkles className="h-3.5 w-3.5" /> Verified today
+            <Sparkles className="h-3.5 w-3.5" /> Coupons & deals
           </div>
           <h1 className="animate-rise delay-100 mt-6 font-display text-4xl font-black leading-[1.02] tracking-tight md:text-7xl">
             The best coupon codes
@@ -96,7 +91,7 @@ function Index() {
             </span>
           </h1>
           <p className="animate-rise delay-200 mx-auto mt-5 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Thousands of hand-tested promo codes and deals from the brands you love — updated every day.
+            Promo codes and deals from the brands you love, collected in one place. Final prices are always confirmed on the retailer site.
           </p>
 
           <form
@@ -235,7 +230,12 @@ function Index() {
       {/* Stats + why */}
       <section className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
         <div className="grid grid-cols-2 divide-x-2 divide-y-2 divide-foreground overflow-hidden rounded-md border-2 border-foreground bg-card md:grid-cols-4 md:divide-y-0" style={{ boxShadow: "var(--shadow-glow)" }}>
-          {stats.map((s) => (
+          {[
+            { value: String(stores.length), label: "Brands listed" },
+            { value: String(allCoupons.length), label: "Active offers" },
+            { value: String(categoryCount), label: "Categories" },
+            { value: "Free", label: "To use, no sign-up" },
+          ].map((s) => (
             <div key={s.label} className="p-6">
               <div className="font-display text-3xl font-black text-primary md:text-5xl">{s.value}</div>
               <div className="mt-1 text-[10px] font-bold uppercase tracking-widest">{s.label}</div>
@@ -244,8 +244,8 @@ function Index() {
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {[
-            { icon: ShieldCheck, title: "100% Verified", desc: "Every code is tested before it goes live so it works at checkout." },
-            { icon: Zap, title: "Updated Daily", desc: "Fresh deals and exclusive discounts land every single day." },
+            { icon: ShieldCheck, title: "Honest Listings", desc: "We list offers as we find them and remove ones reported as not working." },
+            { icon: Zap, title: "Regular Updates", desc: "New offers are added as brands release them." },
             { icon: Copy, title: "One-click Copy", desc: "Copy the code and jump straight to the brand's site." },
           ].map((f) => (
             <div key={f.title} className="flex gap-4 rounded-md border-2 border-foreground bg-card p-6">
@@ -335,7 +335,7 @@ function DealSlider({ deals }: { deals: DealItem[] }) {
                   <Link to="/store/$slug" params={{ slug: d.store.slug }} className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-black uppercase text-primary-foreground hover:opacity-90">
                     {d.type === "Code" ? <><Copy className="h-3.5 w-3.5" /> Get Code</> : <>Get Deal <ArrowRight className="h-3.5 w-3.5" /></>}
                   </Link>
-                  <span className="text-[10px] font-bold uppercase text-muted-foreground">{d.uses} used</span>
+                  
                 </div>
               </div>
             </div>

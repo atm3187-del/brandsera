@@ -48,7 +48,7 @@ function PopularStoresPage() {
                 <div className="flex-1 min-w-0">
                   <div className="font-display font-black truncate">{c.title}</div>
                   <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    {c.store.name} · {c.uses.toLocaleString()} uses
+                    {c.store.name}
                   </div>
                 </div>
                 <Link
