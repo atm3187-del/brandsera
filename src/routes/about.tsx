@@ -1,15 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { seoHead, collectionLd, breadcrumbLd } from "@/lib/seo";
-import { ShieldCheck, Zap, Copy, Users, Award } from "lucide-react";
+import { ShieldCheck, Zap, Copy, MapPin } from "lucide-react";
+
+const TITLE = "About Brands Era — Who We Are";
+const DESC = "Brands Era is a coupon and deals website run by Humayun Babar and Ahtasham Ali from Rawalpindi, Pakistan.";
 
 export const Route = createFileRoute("/about")({
   head: () =>
     seoHead({
-    path: '/about',
-    title: 'About Brands Era — How We Verify Coupons',
-    description: 'Learn how Brands Era tests and verifies coupons to help shoppers save money every day.',
-    jsonLd: [collectionLd('About Brands Era — How We Verify Coupons', 'Learn how Brands Era tests and verifies coupons to help shoppers save money every day.', '/about'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'About Brands Era', path: '/about' }])]
-  }),
+      path: "/about",
+      title: TITLE,
+      description: DESC,
+      jsonLd: [collectionLd(TITLE, DESC, "/about"), breadcrumbLd([{ name: "Home", path: "/" }, { name: "About Brands Era", path: "/about" }])],
+    }),
   component: AboutPage,
 });
 
@@ -19,15 +22,16 @@ function AboutPage() {
       <div className="text-center">
         <h1 className="font-display text-4xl font-black md:text-6xl uppercase">About Brands Era</h1>
         <p className="mx-auto mt-4 max-w-2xl text-muted-foreground font-medium">
-          We are a premier online coupon and deal platform. Our dedicated editorial team manually tests and verifies thousands of promo codes daily, ensuring you always get the highest active discounts at checkout without the hassle of expired codes.
+          Brands Era is a small coupon and deals website. We collect promo codes and offers from popular brands and link you
+          straight to the retailer&apos;s own website, where you complete your purchase. We don&apos;t sell products ourselves.
         </p>
       </div>
 
       <div className="mt-16 grid gap-6 md:grid-cols-3">
         {[
-          { icon: ShieldCheck, title: "100% Verified", desc: "Every code is rigorously tested before publishing to ensure it works." },
-          { icon: Zap, title: "Daily Updates", desc: "Fresh deals and exclusive discounts added every single day." },
-          { icon: Copy, title: "Easy to Use", desc: "One-click copy and seamless redirection for instant checkout savings." },
+          { icon: ShieldCheck, title: "Honest Listings", desc: "We list offers as we find them and remove ones that are reported as expired or not working." },
+          { icon: Zap, title: "Regular Updates", desc: "New offers are added as brands release them." },
+          { icon: Copy, title: "Easy to Use", desc: "Copy a code, then continue to the brand's official site. Always confirm the final price at checkout." },
         ].map((f) => (
           <div key={f.title} className="rounded-md border-2 border-foreground bg-card p-8 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-md border-2 border-foreground bg-accent text-accent-foreground">
@@ -42,22 +46,19 @@ function AboutPage() {
       <div className="mt-16 rounded-md border-2 border-foreground bg-primary p-8 text-primary-foreground md:p-12">
         <div className="grid gap-8 md:grid-cols-2">
           <div>
-            <h2 className="font-display text-3xl font-black uppercase">Our Mission</h2>
+            <h2 className="font-display text-3xl font-black uppercase">Who runs Brands Era</h2>
             <p className="mt-4 text-primary-foreground/80 font-medium">
-              Brands Era exists to make saving money simple, honest, and loud. We cut through the noise of expired codes and fake deals so shoppers can trust every click.
+              Brands Era is operated by Humayun Babar and Ahtasham Ali. We are not affiliated with, or endorsed by, the brands
+              listed on this site unless clearly stated. Some links are affiliate links — see our{" "}
+              <Link to="/disclosure" className="underline">affiliate disclosure</Link>.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-md border-2 border-foreground bg-card p-5 text-card-foreground">
-              <Users className="h-6 w-6 text-primary" />
-              <div className="mt-2 font-display text-3xl font-black">100K+</div>
-              <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Happy Shoppers</div>
-            </div>
-            <div className="rounded-md border-2 border-foreground bg-card p-5 text-card-foreground">
-              <Award className="h-6 w-6 text-primary" />
-              <div className="mt-2 font-display text-3xl font-black">98%</div>
-              <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Success Rate</div>
-            </div>
+          <div className="rounded-md border-2 border-foreground bg-card p-5 text-card-foreground">
+            <MapPin className="h-6 w-6 text-primary" />
+            <div className="mt-2 font-display text-xl font-black uppercase">Rawalpindi, Pakistan</div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Questions, corrections or brand takedown requests? Use our <Link to="/contact" className="underline">contact form</Link>.
+            </p>
           </div>
         </div>
       </div>
