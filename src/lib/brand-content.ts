@@ -26,7 +26,6 @@ export function getBrandContent(store: Store): BrandContent {
   const cat = store.category.toLowerCase();
   const codes = store.coupons.filter((c) => c.type === "Code").length;
   const deals = store.coupons.length - codes;
-  const totalUses = store.coupons.reduce((a, c) => a + c.uses, 0);
   const best = [...store.coupons].sort((a, b) => b.uses - a.uses)[0];
   const seed = hash(store.slug);
 
@@ -89,7 +88,6 @@ export function getBrandContent(store: Store): BrandContent {
       { label: "Active offers", value: String(store.coupons.length) },
       { label: "Promo codes", value: String(codes) },
       { label: "Sitewide deals", value: String(deals) },
-      { label: "Times used", value: totalUses.toLocaleString() },
     ],
   };
 }
