@@ -52,7 +52,7 @@ export const Route = createFileRoute("/store/$slug/$section")({
     const title = `${brand} ${sec} Coupons & Deals — Brands Era`;
     const description =
       loaderData?.section.description ||
-      `Verified ${brand} ${sec.toLowerCase()} coupons, deals, guides and top searches at Brands Era.`;
+      `${brand} ${sec.toLowerCase()} coupons, deals, guides and top searches at Brands Era.`;
     return seoHead({
       path,
       title,

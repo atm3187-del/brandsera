@@ -92,7 +92,7 @@ function SearchPage() {
                     <div className="font-display font-black uppercase">{c.store.name}</div>
                   </div>
                   <p className="mt-3 font-black">{c.title}</p>
-                  <p className="text-xs text-muted-foreground uppercase">{c.type} · {c.uses.toLocaleString()} uses</p>
+                  <p className="text-xs text-muted-foreground uppercase">{c.type}</p>
                 </Link>
               ))}
             </div>

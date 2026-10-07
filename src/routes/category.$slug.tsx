@@ -18,7 +18,7 @@ export const Route = createFileRoute("/category/$slug")({
     const name = loaderData.name;
     const path = `/category/${params.slug}`;
     const title = `${name} Coupons & Promo Codes — Brands Era`;
-    const description = `Verified ${name.toLowerCase()} coupons, promo codes and deals from top brands, checked daily by Brands Era editors.`;
+    const description = `${name} coupons, promo codes and deals from popular brands on Brands Era.`;
     return seoHead({
       path,
       title,
@@ -67,7 +67,7 @@ function CategoryPage() {
         <div>
           <h1 className="font-display text-4xl font-black uppercase md:text-5xl">{name} Coupons</h1>
           <p className="mt-1 font-medium text-muted-foreground">
-            {loading ? "Loading brands…" : `${list.length} ${name.toLowerCase()} brand${list.length === 1 ? "" : "s"} with verified offers.`}
+            {loading ? "Loading brands…" : `${list.length} ${name.toLowerCase()} brand${list.length === 1 ? "" : "s"} with current offers.`}
           </p>
         </div>
       </div>

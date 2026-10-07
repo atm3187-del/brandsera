@@ -68,7 +68,7 @@ export function Footer() {
               <div className="font-display font-black uppercase text-lg">Brands Era</div>
             </div>
             <p className="mt-4 text-sm text-background/70">
-              Save loud. Shop smart. Verified codes from thousands of brands.
+              Coupons and deals from popular brands. Operated by Humayun Babar and Ahtasham Ali, Rawalpindi, Pakistan.
             </p>
             {active.length > 0 && (
               <>
@@ -119,7 +119,7 @@ export function Footer() {
           <div className="min-w-0">
             <div className="font-display text-lg font-black uppercase">Never pay full price again</div>
             <p className="mt-1 text-sm text-background/70">
-              New verified codes land daily across 5,000+ brands.
+              New offers are added as brands release them.
             </p>
           </div>
           <Link

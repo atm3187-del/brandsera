@@ -21,8 +21,8 @@ function DisclosurePage() {
       <h1 className="mt-4 font-display text-4xl font-black uppercase md:text-5xl">Affiliate Disclosure</h1>
       <div className="mt-8 space-y-6">
         {[
-          { h: "How we make money", p: "Brands Era is free to use. When you click a deal and buy something, the retailer may pay us a small commission. That commission funds the team that tests every code." },
-          { h: "It never changes our listings", p: "Offers are ranked by how useful they are to shoppers — verification status, savings size and how often they work. Paying us more does not buy a higher position." },
+          { h: "How we make money", p: "Brands Era is free to use. When you click a deal and buy something, the retailer may pay us a small commission. That commission helps keep the site free. It never costs you anything extra." },
+          { h: "It never changes our listings", p: "Offers are ranked by how useful they are to shoppers — savings size and relevance. Paying us more does not buy a higher position." },
           { h: "Brand names and logos", p: "Brand names and marks belong to their respective owners and are used to identify the retailer whose offers we list. Brands Era is not affiliated with or endorsed by those brands unless stated." },
           { h: "Questions or takedowns", p: "If you represent a brand and want an offer or reference changed, contact us and we will respond promptly." },
         ].map((s) => (

@@ -8,8 +8,8 @@ export const Route = createFileRoute("/blog/")({
     seoHead({
     path: '/blog',
     title: 'Blog — Savings Guides & Brand Insights — Brands Era',
-    description: 'Savings guides, brand deep-dives and coupon tips from the Brands Era editorial team.',
-    jsonLd: [collectionLd('Blog — Savings Guides & Brand Insights — Brands Era', 'Savings guides, brand deep-dives and coupon tips from the Brands Era editorial team.', '/blog'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Blog', path: '/blog' }])]
+    description: 'Savings guides, brand deep-dives and coupon tips from the Brands Era team.',
+    jsonLd: [collectionLd('Blog — Savings Guides & Brand Insights — Brands Era', 'Savings guides, brand deep-dives and coupon tips from the Brands Era team.', '/blog'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Blog', path: '/blog' }])]
   }),
   component: BlogIndex,
 });

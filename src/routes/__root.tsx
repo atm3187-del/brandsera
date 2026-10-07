@@ -88,10 +88,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Brands Era — The Smarter Way to Save Online" },
-      { name: "description", content: "Brands Era helps you find verified promo codes and exclusive discounts from 5,000+ top brands, updated daily." },
+      { name: "description", content: "Brands Era lists promo codes and deals from popular brands and links you straight to the retailer." },
       { name: "author", content: "Brands Era" },
       { property: "og:title", content: "Brands Era — The Smarter Way to Save Online" },
-      { property: "og:description", content: "Verified promo codes from 5,000+ top brands, updated daily." },
+      { property: "og:description", content: "Promo codes and deals from popular brands, in one place." },
       { property: "og:site_name", content: "Brands Era" },
       { name: "twitter:card", content: "summary" },
       { name: "google-site-verification", content: "4_VTOjotLEISAvff8kQHHDtqNn2b_si2nnhQZnKUoZM" },
@@ -122,14 +122,6 @@ gtag('config', 'G-X33K0C8S2L');`,
       },
       {
         children: `gtag('config', 'AW-17818157808');`,
-      },
-      // Google Ads tag (gtag.js)
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=AW-18491624956",
-        async: true,
-      },
-      {
-        children: `gtag('config', 'AW-18491624956');`,
       },
     ],
   }),

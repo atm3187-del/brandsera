@@ -47,8 +47,8 @@ export const Route = createFileRoute("/store/$slug/")({
     const total = loaderData?.coupons.length ?? 0;
     const title = `${name} Coupons & Promo Codes ${new Date().getFullYear()} — Brands Era`;
     const description = loaderData
-      ? `${total} verified ${name} offer${total === 1 ? "" : "s"} (${codes} promo code${codes === 1 ? "" : "s"}). ${loaderData.store.description}`.trim()
-      : `Verified ${name} coupons, promo codes and deals at Brands Era.`;
+      ? `${total} ${name} offer${total === 1 ? "" : "s"} (${codes} promo code${codes === 1 ? "" : "s"}). ${loaderData.store.description}`.trim()
+      : `${name} coupons, promo codes and deals at Brands Era.`;
     const offers = (loaderData?.coupons ?? []).slice(0, 20).map((c) => ({
       "@type": "Offer",
       name: c.title,
@@ -127,9 +127,6 @@ function StorePage() {
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-center">
           <BrandLogo name={store.name} src={store.logoUrl} size="lg" />
           <div className="flex-1">
-            <div className="inline-flex items-center gap-1 rounded-md border-2 border-foreground bg-primary px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary-foreground">
-              <CheckCircle2 className="h-3 w-3" /> Verified
-            </div>
             <h1 className="mt-2 font-display text-4xl font-black uppercase md:text-6xl">{`${store.name} Coupons & Promo Codes ${new Date().getFullYear()}`}</h1>
             <p className="mt-2 text-muted-foreground font-medium">{store.description}</p>
             <a

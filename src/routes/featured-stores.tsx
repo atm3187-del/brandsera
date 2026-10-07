@@ -12,8 +12,8 @@ export const Route = createFileRoute("/featured-stores")({
     seoHead({
     path: '/featured-stores',
     title: 'Featured Stores — Hand-Picked Brand Deals — Brands Era',
-    description: 'Hand-picked brands with the strongest verified coupons and deals right now on Brands Era.',
-    jsonLd: [collectionLd('Featured Stores — Hand-Picked Brand Deals — Brands Era', 'Hand-picked brands with the strongest verified coupons and deals right now on Brands Era.', '/featured-stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Featured Stores', path: '/featured-stores' }])]
+    description: 'Hand-picked brands with the best current coupons and deals right now on Brands Era.',
+    jsonLd: [collectionLd('Featured Stores — Hand-Picked Brand Deals — Brands Era', 'Hand-picked brands with the best current coupons and deals right now on Brands Era.', '/featured-stores'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Featured Stores', path: '/featured-stores' }])]
   }),
   component: FeaturedStoresPage,
 });
@@ -51,7 +51,7 @@ function FeaturedStoresPage() {
             </div>
             <p className="mt-4 text-sm text-muted-foreground">{s.description}</p>
             <div className="mt-5 flex items-center justify-between border-t-2 border-dashed border-foreground/30 pt-4">
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">{s.coupons.length} Verified Offers</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">{s.coupons.length} Offers</span>
               <span className="text-sm font-black text-primary">View Deals →</span>
             </div>
           </Link>

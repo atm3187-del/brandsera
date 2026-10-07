@@ -12,8 +12,8 @@ export const Route = createFileRoute("/categories")({
     seoHead({
     path: '/categories',
     title: 'Coupons by Category — Brands Era',
-    description: 'Explore verified deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.',
-    jsonLd: [collectionLd('Coupons by Category — Brands Era', 'Explore verified deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.', '/categories'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Coupons by Category', path: '/categories' }])]
+    description: 'Explore deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.',
+    jsonLd: [collectionLd('Coupons by Category — Brands Era', 'Explore deals by category: fashion, electronics, travel, health & beauty, gaming, software and more.', '/categories'), breadcrumbLd([{ name: "Home", path: "/" }, { name: 'Coupons by Category', path: '/categories' }])]
   }),
   component: CategoriesPage,
 });
