@@ -95,7 +95,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Brands Era" },
       { name: "twitter:card", content: "summary" },
       { name: "google-site-verification", content: "4_VTOjotLEISAvff8kQHHDtqNn2b_si2nnhQZnKUoZM" },
-      { name: "mitgo-verification", content: "21b268a0-63f9-4c0b-a9f5-977c21c13b76" },
     ],
     links: [
       {
