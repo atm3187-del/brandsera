@@ -115,22 +115,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-X33K0C8S2L');`,
       },
-      // Google Ads tag (gtag.js)
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=AW-17818157808",
-        async: true,
-      },
-      {
-        children: `gtag('config', 'AW-17818157808');`,
-      },
-      // Google Ads tag (second account)
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=AW-18491624956",
-        async: true,
-      },
-      {
-        children: `gtag('config', 'AW-18491624956');`,
-      },
     ],
   }),
   shellComponent: RootShell,
