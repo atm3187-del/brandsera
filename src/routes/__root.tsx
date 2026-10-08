@@ -95,6 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Brands Era" },
       { name: "twitter:card", content: "summary" },
       { name: "google-site-verification", content: "4_VTOjotLEISAvff8kQHHDtqNn2b_si2nnhQZnKUoZM" },
+      { name: "mitgo-verification", content: "21b268a0-63f9-4c0b-a9f5-977c21c13b76" },
     ],
     links: [
       {
@@ -122,6 +123,14 @@ gtag('config', 'G-X33K0C8S2L');`,
       },
       {
         children: `gtag('config', 'AW-17818157808');`,
+      },
+      // Google Ads tag (second account)
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=AW-18491624956",
+        async: true,
+      },
+      {
+        children: `gtag('config', 'AW-18491624956');`,
       },
     ],
   }),
