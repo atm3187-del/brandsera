@@ -45,8 +45,13 @@ export const Route = createFileRoute("/store/$slug/")({
     const name = loaderData?.store.name ?? titleize(params.slug);
     const codes = loaderData?.coupons.filter((c) => c.type === "code").length ?? 0;
     const total = loaderData?.coupons.length ?? 0;
-    const title = `${name} Coupons & Promo Codes ${new Date().getFullYear()} — Brands Era`;
-    const description = loaderData
+    const isTourRadar = params.slug === "tourradar";
+    const title = isTourRadar
+      ? `TourRadar Promo Code & Coupon Codes ${new Date().getFullYear()} | Brands Era`
+      : `${name} Coupons & Promo Codes ${new Date().getFullYear()} — Brands Era`;
+    const description = isTourRadar
+      ? "Looking for a TourRadar promo code? Compare listed TourRadar coupon codes and travel deals, then check current terms and eligibility before booking."
+      : loaderData
       ? `${total} ${name} offer${total === 1 ? "" : "s"} (${codes} promo code${codes === 1 ? "" : "s"}). ${loaderData.store.description}`.trim()
       : `${name} coupons, promo codes and deals at Brands Era.`;
     const offers = (loaderData?.coupons ?? []).slice(0, 20).map((c) => ({
@@ -241,10 +246,12 @@ function StorePage() {
       {/* Top searches on Google for this brand */}
       <section className="mt-12 rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
         <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
-          <TrendingUp className="h-5 w-5" /> Top searches for {store.name}
+          <TrendingUp className="h-5 w-5" /> {store.slug === "tourradar" ? "Top U.S. searches for TourRadar" : `Top searches for ${store.name}`}
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The {store.name} coupon, deal and discount queries shoppers search most on Google. Tap any row to see live results.
+          {store.slug === "tourradar"
+            ? "Estimated U.S. monthly search volumes from Semrush. Actual Google searches vary; open a term to view U.S. results."
+            : `The ${store.name} coupon, deal and discount queries shoppers search most on Google. Tap any row to see live results.`}
         </p>
         <div className="mt-5 divide-y-2 divide-dashed divide-foreground/25 border-y-2 border-foreground/25">
           {topSearches.map((t, i) => (
