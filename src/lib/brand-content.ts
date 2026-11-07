@@ -105,6 +105,25 @@ export interface TopSearch {
  */
 export function getTopSearches(store: Store): TopSearch[] {
   const n = store.name;
+  if (store.slug === "tourradar") {
+    const usTerms = [
+      ["TourRadar promo code", 720],
+      ["TourRadar coupon code", 590],
+      ["TourRadar discounts", 480],
+      ["TourRadar coupon", 320],
+      ["TourRadar discount code", 320],
+      ["promotion code TourRadar", 260],
+      ["TourRadar discount", 260],
+      ["TourRadar student discount", 260],
+      ["Tour Radar promo code", 210],
+      ["TourRadar new customer code", 210],
+    ] as const;
+    return usTerms.map(([term, volume]) => ({
+      term,
+      volume: `${volume}/mo`,
+      url: `https://www.google.com/search?gl=us&hl=en&q=${encodeURIComponent(term)}`,
+    }));
+  }
   const year = new Date().getFullYear();
   const seed = hash(store.slug);
   const patterns = [
