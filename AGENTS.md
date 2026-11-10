@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Public pages prefetch their React Query data in route loaders (ensureQueryData) and the router dehydrates/hydrates the query cache — why: store/section pages must render full content in server HTML for Google indexing.
+- Use the TanStack sitemap server route as the sole sitemap source; remove any static public sitemap that could override its dynamic store, section, and published blog URLs.

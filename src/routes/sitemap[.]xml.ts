@@ -37,26 +37,22 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...categories.map((c) => ({ path: `/category/${categorySlug(c)}`, changefreq: "weekly" as const, priority: "0.7" })),
         ];
 
-        try {
-          const { fetchSitemapData } = await import("@/lib/seo.server");
-          const { stores, sections, posts } = await fetchSitemapData();
-          for (const s of stores) {
-            entries.push({ path: `/store/${encodeURIComponent(s.slug)}`, lastmod: s.updated_at, changefreq: "daily", priority: "0.8" });
-          }
-          for (const sec of sections) {
-            if (!sec.stores?.slug) continue;
-            entries.push({
-              path: `/store/${encodeURIComponent(sec.stores.slug)}/${encodeURIComponent(sec.slug)}`,
-              lastmod: sec.updated_at,
-              changefreq: "weekly",
-              priority: "0.7",
-            });
-          }
-          for (const p of posts) {
-            entries.push({ path: `/blog/${encodeURIComponent(p.slug)}`, lastmod: p.updated_at, changefreq: "monthly", priority: "0.6" });
-          }
-        } catch (err) {
-          console.error("[sitemap] dynamic entries failed", err);
+        const { fetchSitemapData } = await import("@/lib/seo.server");
+        const { stores, sections, posts } = await fetchSitemapData();
+        for (const s of stores) {
+          entries.push({ path: `/store/${encodeURIComponent(s.slug)}`, lastmod: s.updated_at, changefreq: "daily", priority: "0.8" });
+        }
+        for (const sec of sections) {
+          if (!sec.stores?.slug) continue;
+          entries.push({
+            path: `/store/${encodeURIComponent(sec.stores.slug)}/${encodeURIComponent(sec.slug)}`,
+            lastmod: sec.updated_at,
+            changefreq: "weekly",
+            priority: "0.7",
+          });
+        }
+        for (const p of posts) {
+          entries.push({ path: `/blog/${encodeURIComponent(p.slug)}`, lastmod: p.updated_at, changefreq: "monthly", priority: "0.6" });
         }
 
         const urls = entries.slice(0, MAX_URLS).map((e) =>

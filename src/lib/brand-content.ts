@@ -29,6 +29,52 @@ export function getBrandContent(store: Store): BrandContent {
   const best = [...store.coupons].sort((a, b) => b.uses - a.uses)[0];
   const seed = hash(store.slug);
 
+  if (store.slug === "naheed") {
+    return {
+      about: [
+        "Naheed.pk is an online shopping destination in Pakistan for groceries, makeup, skincare, haircare, mobiles, electronics and more.",
+        `Browse the ${store.coupons.length} Naheed offer${store.coupons.length === 1 ? "" : "s"} currently listed on this page. Offer availability, eligibility and final prices can change, so confirm details at Naheed.pk before ordering.`,
+      ],
+      highlights: [
+        `${store.coupons.length} Naheed offer${store.coupons.length === 1 ? "" : "s"} listed on this page`,
+        "Pakistan-focused offers for Naheed.pk shoppers",
+        "Check each offer’s current terms at Naheed.pk",
+      ],
+      howTo: [
+        "Browse the Naheed offers listed above and open one that matches your shopping needs.",
+        "Review the offer details and eligibility before visiting Naheed.pk.",
+        "Add eligible products to your Naheed.pk order and apply a code if the offer provides one.",
+        "Confirm the final price and discount in your order summary before checkout.",
+      ],
+      faqs: [
+        {
+          q: "Does Naheed.pk have a promo code or deal right now?",
+          a: `This page currently lists ${store.coupons.length} Naheed offer${store.coupons.length === 1 ? "" : "s"}. Check each listing for its type and terms; we do not claim a code works unless it is shown as an available code.`,
+        },
+        {
+          q: "What can shoppers find at Naheed.pk?",
+          a: "Naheed.pk offers online shopping across groceries, makeup, skincare, haircare, mobiles, electronics and other product categories. Product availability may vary.",
+        },
+        {
+          q: "How can I use a Naheed.pk offer?",
+          a: "Open an offer on this page, review its terms, and follow its link to Naheed.pk. Confirm that the discount appears in your order total before checkout.",
+        },
+      ],
+      articles: [
+        {
+          title: "How to check Naheed.pk offers before you order",
+          excerpt: "Review offer terms, eligible products and the final order total before completing checkout.",
+          readMinutes: 3,
+        },
+      ],
+      facts: [
+        { label: "Listed offers", value: String(store.coupons.length) },
+        { label: "Promo codes", value: String(codes) },
+        { label: "Deals", value: String(deals) },
+      ],
+    };
+  }
+
   return {
     about: [
       `${n} is a ${cat} brand featured on Brands Era. ${store.description}`,
@@ -105,6 +151,23 @@ export interface TopSearch {
  */
 export function getTopSearches(store: Store): TopSearch[] {
   const n = store.name;
+  if (store.slug === "naheed") {
+    const pakistanTerms = [
+      "Naheed promo code Pakistan",
+      "Naheed.pk deals",
+      "Naheed discount code",
+      "Naheed online shopping Pakistan",
+      "Naheed grocery offers",
+      "Naheed skincare offers",
+      "Naheed makeup deals",
+      "Naheed.pk coupon code",
+    ];
+    return pakistanTerms.map((term) => ({
+      term,
+      volume: "Open Google",
+      url: `https://www.google.com/search?gl=pk&hl=en&q=${encodeURIComponent(term)}`,
+    }));
+  }
   if (store.slug === "tourradar") {
     const usTerms = [
       ["TourRadar promo code", 720],

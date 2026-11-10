@@ -46,11 +46,16 @@ export const Route = createFileRoute("/store/$slug/")({
     const codes = loaderData?.coupons.filter((c) => c.type === "code").length ?? 0;
     const total = loaderData?.coupons.length ?? 0;
     const isTourRadar = params.slug === "tourradar";
+    const isNaheed = params.slug === "naheed";
     const title = isTourRadar
       ? `TourRadar Promo Code & Coupon Codes ${new Date().getFullYear()} | Brands Era`
+      : isNaheed
+      ? "Naheed.pk Deals & Promo Codes in Pakistan | Brands Era"
       : `${name} Coupons & Promo Codes ${new Date().getFullYear()} — Brands Era`;
     const description = isTourRadar
       ? "Looking for a TourRadar promo code? Compare listed TourRadar coupon codes and travel deals, then check current terms and eligibility before booking."
+      : isNaheed
+      ? "Browse Naheed.pk deals and promo codes in Pakistan, including listed offers for groceries, makeup, skincare, haircare, mobiles and electronics. Check each offer’s terms and final price at Naheed.pk."
       : loaderData
       ? `${total} ${name} offer${total === 1 ? "" : "s"} (${codes} promo code${codes === 1 ? "" : "s"}). ${loaderData.store.description}`.trim()
       : `${name} coupons, promo codes and deals at Brands Era.`;
@@ -246,11 +251,17 @@ function StorePage() {
       {/* Top searches on Google for this brand */}
       <section className="mt-12 rounded-md border-2 border-foreground bg-card p-6 md:p-8" style={{ boxShadow: "var(--shadow-card)" }}>
         <h2 className="flex items-center gap-2 font-display text-2xl font-black uppercase">
-          <TrendingUp className="h-5 w-5" /> {store.slug === "tourradar" ? "Top U.S. searches for TourRadar" : `Top searches for ${store.name}`}
+          <TrendingUp className="h-5 w-5" /> {store.slug === "tourradar"
+            ? "Top U.S. searches for TourRadar"
+            : store.slug === "naheed"
+            ? "Pakistan search terms for Naheed.pk"
+            : `Top searches for ${store.name}`}
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {store.slug === "tourradar"
             ? "Estimated U.S. monthly search volumes from Semrush. Actual Google searches vary; open a term to view U.S. results."
+            : store.slug === "naheed"
+            ? "Pakistan-focused search phrases related to Naheed.pk. Semrush reports no reliable search-volume data for these brand terms, so no volume estimates are shown."
             : `The ${store.name} coupon, deal and discount queries shoppers search most on Google. Tap any row to see live results.`}
         </p>
         <div className="mt-5 divide-y-2 divide-dashed divide-foreground/25 border-y-2 border-foreground/25">
